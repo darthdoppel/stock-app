@@ -1,22 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react'
-
-interface Accessory {
-  _id: string
-  name: string
-  category: string
-  brand: string
-  compatiblePhoneModel: string
-  price: number
-  quantityInStock: number
-  description: string
-  supplier: string
-  dateAdded: Date
-  imageUrl: string
-}
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner } from '@nextui-org/react'
+import { type Accessory } from './types'
 
 export default function TableComponent () {
   const [accessories, setAccessories] = useState<Accessory[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     // Esta función obtiene los accesorios del servidor
@@ -27,6 +15,8 @@ export default function TableComponent () {
         setAccessories(data)
       } catch (error) {
         console.error('Error al obtener los accesorios:', error)
+      } finally {
+        setLoading(false)
       }
     }
 
@@ -34,24 +24,31 @@ export default function TableComponent () {
   }, []) // El array vacío significa que este efecto se ejecuta solo una vez, similar a componentDidMount
 
   return (
-        <Table aria-label="Accessories table" className="w-1/2 mx-auto">
-            <TableHeader>
-                <TableColumn>NOMBRE</TableColumn>
-                <TableColumn>CANTIDAD</TableColumn>
-                <TableColumn>ACCIONES</TableColumn>
-            </TableHeader>
-            <TableBody>
-                {accessories.map(accessory => (
-                    <TableRow key={accessory._id}>
-                        <TableCell>{accessory.name}</TableCell>
-                        <TableCell>{accessory.quantityInStock}</TableCell>
-                        <TableCell>
-                            {/* Aquí puedes agregar botones o acciones específicas para cada accesorio */}
-                            Acciones
-                        </TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
+    <div className="w-1/2 mx-auto">
+      {loading
+        ? (
+        <div className="flex justify-center">
+              <Spinner />
+        </div>
+          )
+        : (
+        <Table aria-label="Accessories table">
+          <TableHeader>
+            <TableColumn>NOMBRE</TableColumn>
+            <TableColumn>CANTIDAD</TableColumn>
+            <TableColumn>ACCIONES</TableColumn>
+          </TableHeader>
+          <TableBody>
+            {accessories.map(accessory => (
+              <TableRow key={accessory._id}>
+                <TableCell>{accessory.name}</TableCell>
+                <TableCell>{accessory.quantityInStock}</TableCell>
+                <TableCell>Acciones</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
         </Table>
+          )}
+    </div>
   )
 }
