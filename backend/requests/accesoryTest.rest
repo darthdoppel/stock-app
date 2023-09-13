@@ -1,0 +1,71 @@
+### Crear funda para iPhone 13 Pro
+POST http://localhost:3000/accessory
+Content-Type: application/json
+
+{
+    "name": "Funda de Cuero",
+    "category": "fundas",
+    "brand": "Apple",
+    "compatiblePhoneModel": "iPhone 13 Pro",
+    "price": 49.99,
+    "quantityInStock": 150,
+    "description": "Funda de cuero original de Apple para iPhone 13 Pro.",
+    "supplier": "Apple Supplier",
+    "imageUrl": "http://example.com/funda-cuero-iphone13pro.jpg"
+}
+
+###
+
+### Crear protector de pantalla para iPhone 13
+POST http://localhost:3000/accessory
+Content-Type: application/json
+
+{
+    "name": "Protector de Pantalla Cristal Templado",
+    "category": "protectores de pantalla",
+    "brand": "TechGuard",
+    "compatiblePhoneModel": "iPhone 13",
+    "price": 9.99,
+    "quantityInStock": 200,
+    "description": "Protector de pantalla de cristal templado para iPhone 13.",
+    "supplier": "TechGuard Supplies",
+    "imageUrl": "http://example.com/protector-iphone13.jpg"
+}
+
+###
+
+### Crear auriculares inalámbricos
+POST http://localhost:3000/accessory
+Content-Type: application/json
+
+{
+    "name": "Auriculares Inalámbricos Pro",
+    "category": "auriculares",
+    "brand": "SoundTech",
+    "compatiblePhoneModel": "Universal",
+    "price": 129.99,
+    "quantityInStock": 100,
+    "description": "Auriculares inalámbricos con cancelación de ruido.",
+    "supplier": "SoundTech Supplier",
+    "imageUrl": "http://example.com/auriculares-pro.jpg"
+}
+
+###
+
+### Crear cargador rápido USB-C
+POST http://localhost:3000/accessory
+Content-Type: application/json
+
+{
+    "name": "Cargador Rápido USB-C",
+    "category": "cargadores",
+    "brand": "ChargeFast",
+    "compatiblePhoneModel": "Universal",
+    "price": 29.99,
+    "quantityInStock": 250,
+    "description": "Cargador rápido con conexión USB-C.",
+    "supplier": "ChargeFast Supplies",
+    "imageUrl": "http://example.com/cargador-usb-c.jpg"
+}
+
+###
