@@ -2,7 +2,7 @@ import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from '@n
 
 export default function NavBar () {
   return (
-    <Navbar className="fixed top-0 left-0 w-full z-50">
+    <Navbar className="fixed top-0 left-0 w-full z-50 mb-4">
       <NavbarBrand>
         <p className="font-bold text-inherit">STOCK APP</p>
       </NavbarBrand>
