@@ -1,4 +1,17 @@
 
-GET  http://localhost:3000/accessory/6501fd1c92aac2dc2d82b4cf
+
+// Solicitud POST para el segundo accesorio
+POST http://localhost:3000/accessory
 Content-Type: application/json
+
+{
+  "name": "Auriculares Bluetooth",
+  "category": "auriculares",
+  "brand": "Sony",
+  "price": 49.99,
+  "quantityInStock": 100,
+  "description": "Auriculares inalámbricos con cancelación de ruido",
+  "supplier": "Sony Corporation",
+  "imageUrl": "https://arsonyb2c.vtexassets.com/arquivos/ids/362181/01-GENBA-WH-CH520-W-Main-Image-Sony-Store-Online.jpg?v=1780993463"
+}
 

@@ -80,17 +80,17 @@ export default function AddAccessoryModal () {
               {error !== '' && <p className="text-red-600">{error}</p>}
               <form onSubmit={(e) => { e.preventDefault(); void handleSubmit() }}>
 
-                  <Input name="name" label="Nombre" placeholder="Introduce el nombre del accesorio" required onChange={handleChange} />
+                  <Input isRequired name="name" label="Nombre" placeholder="Introduce el nombre del accesorio" required onChange={handleChange} />
                   <Divider className="my-4" />
-                  <Input name="brand" label="Marca" placeholder="Introduce la marca del accesorio" onChange={handleChange} />
+                  <Input isRequired name="brand" label="Marca" placeholder="Introduce la marca del accesorio" onChange={handleChange} />
                   <Divider className="my-4" />
-                  <Input name="compatiblePhoneModel" label="Modelo de teléfono compatible" placeholder="Introduce el modelo de teléfono compatible" onChange={handleChange} />
+                  <Input isRequired name="compatiblePhoneModel" label="Modelo de teléfono compatible" placeholder="Introduce el modelo de teléfono compatible" onChange={handleChange} />
                   <Divider className="my-4" />
-                  <Input type="number" name="quantityInStock" label="Cantidad en Stock" placeholder="Introduce la cantidad en stock" required onChange={handleChange}/>
+                  <Input isRequired type="number" name="quantityInStock" label="Cantidad en Stock" placeholder="Introduce la cantidad en stock" required onChange={handleChange}/>
                   <Divider className="my-4" />
-                  <Input type="number" name="price" label="Precio" placeholder="Introduce el precio" required onChange={handleChange} />
+                  <Input isRequired type="number" name="price" label="Precio" placeholder="Introduce el precio" required onChange={handleChange} />
                   <Divider className="my-4" />
-                <Select
+                <Select isRequired
                     value={category}
                     onChange={(e) => { setCategory(e.target.value) }}
                     label="Categoría"
@@ -100,7 +100,7 @@ export default function AddAccessoryModal () {
                     <SelectItem key="fundas" value="fundas">
                         Fundas
                     </SelectItem>
-                    <SelectItem key="protectores-de-pantalla" value="protectores de pantalla">
+                    <SelectItem key="protectores de pantalla" value="protectores de pantalla">
                         Protectores de Pantalla
                     </SelectItem>
                     <SelectItem key="auriculares" value="auriculares">

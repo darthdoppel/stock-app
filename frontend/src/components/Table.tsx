@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Tooltip } from '@nextui-org/react'
+import { Image, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Tooltip, Pagination } from '@nextui-org/react'
 import { type Accessory } from './types'
 import { EditIcon } from './EditIcon'
 import { DeleteIcon } from './DeleteIcon'
@@ -13,12 +13,14 @@ export default function TableComponent () {
   const [editingAccessoryId, setEditingAccessoryId] = useState<string | null>(null)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [deletingAccessoryId, setDeletingAccessoryId] = useState<string | null>(null)
+  const [currentPage, setCurrentPage] = useState(1) // Agrega el estado currentPage
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await fetchAccessories() // Utiliza la función del servicio para obtener los accesorios
         setAccessories(data)
+        setCurrentPage(1) // Establece la página actual en la página inicial después de cargar los accesorios
       } catch (error) {
         console.error('Error al obtener los accesorios:', error)
       } finally {
@@ -59,6 +61,13 @@ export default function TableComponent () {
     }
   }
 
+  // Define la función handlePageChange para manejar el cambio de página
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage)
+  }
+
+  const itemsPerPage = 10 // Define el número de elementos por página
+
   return (
     <div className="w-1/2 mx-auto">
       {loading
@@ -78,9 +87,26 @@ export default function TableComponent () {
             <TableColumn>ACCIONES</TableColumn>
           </TableHeader>
           <TableBody>
-            {accessories.map(accessory => (
+            {accessories
+              .slice(
+                (currentPage - 1) * itemsPerPage,
+                currentPage * itemsPerPage
+              )
+              .map((accessory => (
               <TableRow key={accessory._id}>
-                <TableCell>{accessory.name}</TableCell>
+                <TableCell className="flex items-center">
+                  <Image
+                    width={50}
+                    height={50}
+                    alt={accessory.name}
+                    src={accessory.imageUrl}
+                    className="mr-2" // Agrega margen a la derecha para separar la imagen y el nombre
+                  />
+                  <div className="p-2"> {/* Agrega relleno (padding) alrededor de la imagen y el nombre */}
+                    {accessory.name}
+                  </div>
+                </TableCell>
+
                 <TableCell className='capitalize'>{accessory.category}</TableCell>
                 <TableCell>{accessory.quantityInStock}</TableCell>
                 <TableCell>{accessory.price.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</TableCell>
@@ -104,7 +130,7 @@ export default function TableComponent () {
                   </div>
                 </TableCell>
               </TableRow>
-            ))}
+              )))}
           </TableBody>
         </Table>
         {(editingAccessoryId != null) && (
@@ -128,6 +154,18 @@ export default function TableComponent () {
 
         </>
           )}
+
+{accessories.length > itemsPerPage && (
+        <Pagination
+          isCompact
+          showControls
+          total={Math.ceil(accessories.length / itemsPerPage)} // Calcular el número total de páginas
+          page={currentPage} // Establecer la página actual
+          onChange={(newPage) => {
+            handlePageChange(newPage)
+          }}
+        />
+)}
     </div>
   )
 }
