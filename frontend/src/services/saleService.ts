@@ -47,7 +47,7 @@ export async function createSale (
   saleDetails: {
     date: Date
     accessoriesSold: Array<{
-      accessory: string
+      _id: string
       quantity: number
     }>
     total: number

@@ -78,7 +78,7 @@ export default function TableComponent () {
     setCurrentPage(newPage)
   }
 
-  const handleSelectionChange = (selectedItems: any) => {
+  const handleSelectionChange = (selectedItems: string[]) => {
     const newSelectedItems = new Set(selectedItems)
 
     setSelectedItems(newSelectedItems)
@@ -86,9 +86,9 @@ export default function TableComponent () {
     const selectedArray = [...newSelectedItems]
     console.log(selectedArray)
 
-    selectedArray.forEach((id: string) => {
+    selectedArray.forEach((id) => {
       // Si el ID seleccionado no está en el estado quantities, lo inicializamos con 1
-      if (!quantities[id]) {
+      if (quantities[id] === undefined) {
         setQuantities((prev) => ({ ...prev, [id]: 1 }))
       }
     })
@@ -110,9 +110,9 @@ export default function TableComponent () {
 
   const handleSellClick = async () => {
     // Convertir el Set de selectedItems y el objeto quantities a un array de accesorios
-    const itemsToSell = [...selectedItems].map(id => ({
-      _id: id,
-      quantity: quantities[id]
+    const itemsToSell = [...selectedItems].map((id) => ({
+      _id: id as string, // Añadir una afirmación de tipo para indicar que id es de tipo string
+      quantity: quantities[id as string] // Afirmación de tipo
     }))
 
     // Actualizar el estado del stock en el frontend
@@ -128,7 +128,7 @@ export default function TableComponent () {
     // Calcular el total sumando los precios de los accesorios vendidos
     const total = itemsToSell.reduce((acc, item) => {
       const accessory = accessories.find(acc => acc._id === item._id)
-      if (accessory) {
+      if (accessory != null) {
         return acc + accessory.price * item.quantity
       }
       return acc
@@ -162,20 +162,18 @@ export default function TableComponent () {
           color="primary"
           size="sm"
           variant="solid"
-          onClick={handleSellClick}
+          onClick={() => { void handleSellClick() }}
           isDisabled={selectedItems.size === 0}
           className="mb-4 p-3"
-        >
+      >
           Vender
-        </Button>
+      </Button>
 
         <div style={{ margin: '20px auto', textAlign: 'center' }}>
         <Table
             selectionMode="multiple"
             aria-label="Accessories table"
-            selected={Array.from(selectedItems)} // Convierte el conjunto a un arreglo
-            onSelectionChange={handleSelectionChange}
-
+            onSelectionChange={handleSelectionChange as any} // Convierte la función a any
           >
 
           <TableHeader>
@@ -217,7 +215,8 @@ export default function TableComponent () {
                             🛒
                           </span>
                         </Tooltip>
-                        {`Cantidad: ${quantities[accessory._id] || 1}`}
+                        {`Cantidad: ${quantities[accessory._id] ?? 1}`}
+
                       </>
                   )}
 
