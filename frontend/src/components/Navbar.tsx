@@ -8,7 +8,7 @@ export default function NavBar () {
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
-          <Link color="foreground" href="#">
+          <Link color="foreground" href="/">
             Accesorios
           </Link>
         </NavbarItem>
@@ -18,8 +18,8 @@ export default function NavBar () {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="#">
-            Servicios
+          <Link color="foreground" href="/sales">
+            Ventas
           </Link>
         </NavbarItem>
       </NavbarContent>

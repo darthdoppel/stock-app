@@ -1,0 +1,35 @@
+### Crear Venta 1
+POST http://localhost:3000/sale
+Content-Type: application/json
+
+{
+  "date": "2023-09-01T10:00:00Z",
+  "accessoriesSold": ["6501fd1c92aac2dc2d82b4cf"],
+  "total": 80.00
+}
+
+###
+
+### Crear Venta 2
+POST http://localhost:3000/sale
+Content-Type: application/json
+
+{
+  "date": "2023-09-05T15:30:00Z",
+  "accessoriesSold": ["6501ff1b6af89925a46460bf"],
+  "total": 20.00
+}
+
+###
+
+### Crear Venta 3
+POST http://localhost:3000/sale
+Content-Type: application/json
+
+{
+  "date": "2023-09-07T12:15:00Z",
+  "accessoriesSold": ["6501fd1c92aac2dc2d82b4cf", "6501ff1b6af89925a46460bf"],
+  "total": 100.00
+}
+
+###

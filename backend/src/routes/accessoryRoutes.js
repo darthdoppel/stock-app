@@ -15,8 +15,20 @@ router.post('/accessory', async (req, res) => {
 
 router.get('/accessories', async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1 // Obtén el número de página de la consulta o usa 1 como valor predeterminado
+    const perPage = parseInt(req.query.perPage) || 10 // Obtén la cantidad por página o usa 10 como valor predeterminado
+
+    const skip = (page - 1) * perPage // Calcula el número de documentos para omitir
     const accessories = await Accessory.find()
-    res.send(accessories)
+      .skip(skip) // Omite los documentos anteriores en función de la página
+      .limit(perPage) // Limita la cantidad de documentos por página
+
+    const totalAccessories = await Accessory.countDocuments() // Cuenta el número total de documentos en la colección
+
+    res.send({
+      data: accessories,
+      total: totalAccessories
+    })
   } catch (error) {
     console.error('Error al obtener accesorios:', error)
     res.status(500).send('Error al obtener accesorios')

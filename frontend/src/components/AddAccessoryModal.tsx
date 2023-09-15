@@ -68,7 +68,9 @@ export default function AddAccessoryModal () {
 
   return (
     <>
-      <Button onPress={onOpen} color="primary">Agregar accesorio</Button>
+      <div className="flex justify-end p-4">
+        <Button onPress={onOpen} color="primary">Agregar accesorio</Button>
+      </div>
       <Modal backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
         <ModalContent>
           {(onClose) => (

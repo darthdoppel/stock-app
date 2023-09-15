@@ -4,11 +4,16 @@ import { type Accessory } from '../components/types'
 
 const BASE_URL = 'http://localhost:3000' // Ajusta la URL base según tu API
 
-export async function fetchAccessories (): Promise<Accessory[]> {
+export async function fetchAccessories (
+  page: number,
+  perPage: number
+): Promise<{ data: Accessory[], total: number }> {
   try {
-    const response = await fetch(`${BASE_URL}/accessories`)
-    const data = await response.json()
-    return data
+    const response = await fetch(
+      `${BASE_URL}/accessories?page=${page}&perPage=${perPage}`
+    )
+    const responseData = await response.json()
+    return responseData // Devuelve la estructura { data, total }
   } catch (error) {
     console.error('Error al obtener los accesorios:', error)
     throw error
