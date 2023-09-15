@@ -82,4 +82,26 @@ router.delete('/accessory/:id', async (req, res) => {
   }
 })
 
+router.put('/update-stock/:id', async (req, res) => {
+  try {
+    const id = req.params.id
+    const { quantity } = req.body
+
+    // Actualizar el stock en la base de datos
+    const accessory = await Accessory.findById(id)
+    if (!accessory) {
+      res.status(404).send('Accesorio no encontrado')
+      return
+    }
+
+    accessory.quantityInStock = quantity
+    await accessory.save()
+
+    res.status(200).send('Stock actualizado con éxito')
+  } catch (error) {
+    console.error('Error al actualizar el stock del accesorio:', error)
+    res.status(500).send('Error al actualizar el stock del accesorio')
+  }
+})
+
 module.exports = router

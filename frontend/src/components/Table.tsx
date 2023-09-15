@@ -115,6 +115,16 @@ export default function TableComponent () {
       quantity: quantities[id]
     }))
 
+    // Actualizar el estado del stock en el frontend
+    const updatedAccessories = [...accessories]
+    itemsToSell.forEach(item => {
+      const accessoryIndex = updatedAccessories.findIndex(acc => acc._id === item._id)
+      if (accessoryIndex !== -1) {
+        updatedAccessories[accessoryIndex].quantityInStock -= item.quantity
+      }
+    })
+    setAccessories(updatedAccessories)
+
     // Calcular el total sumando los precios de los accesorios vendidos
     const total = itemsToSell.reduce((acc, item) => {
       const accessory = accessories.find(acc => acc._id === item._id)
@@ -159,11 +169,13 @@ export default function TableComponent () {
           Vender
         </Button>
 
+        <div style={{ margin: '20px auto', textAlign: 'center' }}>
         <Table
             selectionMode="multiple"
             aria-label="Accessories table"
             selected={Array.from(selectedItems)} // Convierte el conjunto a un arreglo
             onSelectionChange={handleSelectionChange}
+
           >
 
           <TableHeader>
@@ -231,6 +243,7 @@ export default function TableComponent () {
           </TableBody>
         </Table>
 
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
         {totalPages > 1 && (
             <Pagination
               isCompact
@@ -238,8 +251,10 @@ export default function TableComponent () {
               total={totalPages} // Utilizamos el número total de páginas
               page={currentPage}
               onChange={handlePageChange}
+              className='mt-4'
             />
         )}
+        </div>
 
         {isFetching && (
         <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
@@ -272,6 +287,8 @@ export default function TableComponent () {
             onOpenChange={() => { setEditingQuantityAccessoryId(null) }}
             onQuantityConfirm={handleQuantityConfirm}
           />
+
+        </div>
 
         </div>
 

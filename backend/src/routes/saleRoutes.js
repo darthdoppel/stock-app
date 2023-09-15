@@ -1,11 +1,38 @@
 const express = require('express')
 const router = express.Router()
 const Sale = require('../models/Sale') // Importar el modelo de ventas
+const Accessory = require('../models/Accessory') // Importar el modelo de accesorios
 
 router.post('/sale', async (req, res) => {
   try {
-    const newSale = new Sale(req.body)
+    const { date, accessoriesSold, total } = req.body
+
+    // Registrar la venta
+    const newSale = new Sale({
+      date,
+      accessoriesSold,
+      total
+    })
+
     const savedSale = await newSale.save()
+
+    // Actualizar el stock de los accesorios vendidos
+    for (const item of accessoriesSold) {
+      const accessoryId = item._id // Supongo que el ID del accesorio vendido está en _id
+      const quantitySold = item.quantity
+
+      // Recuperar el accesorio de la base de datos
+      const accessory = await Accessory.findById(accessoryId)
+      if (!accessory) {
+        console.error(`Accesorio con ID ${accessoryId} no encontrado.`)
+        // Puedes manejar este error como consideres apropiado
+      } else {
+        // Actualizar el stock del accesorio
+        accessory.quantityInStock -= quantitySold
+        await accessory.save()
+      }
+    }
+
     res.status(201).send(savedSale)
   } catch (error) {
     console.error('Error al guardar la venta:', error)

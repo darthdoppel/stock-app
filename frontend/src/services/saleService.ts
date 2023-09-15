@@ -43,14 +43,16 @@ export async function deleteSale (id: string): Promise<void> {
   }
 }
 
-export async function createSale (saleDetails: {
-  date: Date
-  accessoriesSold: Array<{
-    accessory: string
-    quantity: number
-  }>
-  total: number
-}): Promise<Sale> {
+export async function createSale (
+  saleDetails: {
+    date: Date
+    accessoriesSold: Array<{
+      accessory: string
+      quantity: number
+    }>
+    total: number
+  }
+): Promise<Sale> {
   try {
     const response = await fetch(`${BASE_URL}/sale`, {
       method: 'POST',
@@ -61,12 +63,40 @@ export async function createSale (saleDetails: {
     })
 
     if (!response.ok) {
+      console.error('Error al crear la venta - Respuesta HTTP:', response.status)
+      const errorResponse = await response.json()
+      console.error('Detalles del error:', errorResponse)
       throw new Error('Error al crear la venta')
     }
 
     return await response.json()
   } catch (error) {
     console.error('Error al crear la venta:', error)
+    throw error
+  }
+}
+
+export async function updateAccessoryStock (
+  id: string,
+  newQuantity: number
+): Promise<void> {
+  try {
+    const response = await fetch(`${BASE_URL}/accessory/update-stock/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ quantity: newQuantity })
+    })
+
+    if (!response.ok) {
+      console.error('Error al actualizar el stock del accesorio - Respuesta HTTP:', response.status)
+      const errorResponse = await response.json()
+      console.error('Detalles del error:', errorResponse)
+      throw new Error('Error al actualizar el stock del accesorio')
+    }
+  } catch (error) {
+    console.error('Error al actualizar el stock del accesorio:', error)
     throw error
   }
 }
