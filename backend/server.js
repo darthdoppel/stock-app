@@ -5,6 +5,7 @@ const accessoryRoutes = require('./src/routes/accessoryRoutes')
 const saleRoutes = require('./src/routes/saleRoutes')
 const clientRoutes = require('./src/routes/clientRoutes')
 const equipmentRoutes = require('./src/routes/equipmentRoutes')
+const workOrderRoutes = require('./src/routes/workOrderRoutes')
 const errorHandler = require('./src/middleware/errorHandler')
 const connectToDatabase = require('./src/utils/dbConnection')
 
@@ -18,6 +19,7 @@ app.use(accessoryRoutes)
 app.use(saleRoutes)
 app.use(clientRoutes)
 app.use(equipmentRoutes)
+app.use(workOrderRoutes)
 app.use(errorHandler)
 
 app.listen(PORT, () => {

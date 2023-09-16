@@ -1,0 +1,3 @@
+### Crear una nueva orden de trabajo para el cliente 65051443e6afcf474e5df38e
+GET http://localhost:3000/work-orders
+Content-Type: application/json

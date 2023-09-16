@@ -22,6 +22,11 @@ export default function NavBar () {
             Ventas
           </Link>
         </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" href="/work-orders">
+            Ordenes de trabajo
+          </Link>
+        </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">

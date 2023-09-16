@@ -2,6 +2,7 @@ import './index.css'
 import TableComponent from './components/Table'
 import SalesTable from './components/SalesTable'
 import ClientTable from './components/ClientTable'
+import WorkOrderTable from './components/WorkOrderTable'
 import NavBar from './components/Navbar'
 import { Toaster } from 'sonner'
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom'
@@ -23,6 +24,7 @@ function Content () {
         <Route path="/sales" element={<SalesTable />} />
         <Route path="/" element={<TableComponent />} />
         <Route path="/clients" element={<ClientTable />} />
+        <Route path="/work-orders" element={<WorkOrderTable />} />
       </Routes>
     </div>
   )

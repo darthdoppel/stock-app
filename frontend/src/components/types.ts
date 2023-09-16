@@ -21,3 +21,23 @@ export interface Client {
   address: string
   dateAdded: Date
 }
+
+export interface Equipment {
+  type: 'notebook' | 'celular' | 'tablet' | 'otros'
+  brand: string
+  model: string
+  problemDescription: string
+  repairCost: number
+  estimatedProfit: number
+  dateReceived: Date
+  dateReturned?: Date
+}
+
+export interface WorkOrder {
+  _id: string
+  client: Client
+  equipments: Equipment[]
+  dateCreated: Date
+  status: 'received' | 'in-progress' | 'completed' | 'delivered'
+  orderNumber: number
+}
