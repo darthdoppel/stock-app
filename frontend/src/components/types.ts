@@ -11,3 +11,13 @@ export interface Accessory {
   dateAdded: Date
   imageUrl: string
 }
+
+export interface Client {
+  _id: string
+  firstName: string
+  lastName: string
+  phoneNumber: string
+  email: string
+  address: string
+  dateAdded: Date
+}

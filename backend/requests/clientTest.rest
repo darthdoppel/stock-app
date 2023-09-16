@@ -1,0 +1,14 @@
+POST http://localhost:3000/client
+Content-Type: application/json
+
+{
+  "firstName": "Sofía",
+  "lastName": "López",
+  "phoneNumber": "+5491178901234",
+  "email": "sofia.lopez@email.com",
+  "address": "Ruta del Sol 567, Salta, Argentina"
+}
+
+
+
+

@@ -13,7 +13,7 @@ export default function NavBar () {
           </Link>
         </NavbarItem>
         <NavbarItem isActive>
-          <Link href="#" aria-current="page">
+          <Link href="/clients" aria-current="page">
             Clientes
           </Link>
         </NavbarItem>

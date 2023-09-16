@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Button, Image, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Tooltip, Pagination } from '@nextui-org/react'
+import { Button, Image, Input, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Tooltip, Pagination } from '@nextui-org/react'
 import { type Accessory } from './types'
 import { EditIcon } from './EditIcon'
 import { DeleteIcon } from './DeleteIcon'
@@ -8,7 +8,8 @@ import DeleteAccessoryModal from './DeleteAccessoryModal'
 import QuantitySelectionModal from './QuantitySelectionModal'
 import { fetchAccessories, deleteAccessory } from '../services/accessoryService'
 import { createSale } from '../services/saleService'
-
+import AddAccessoryModal from './AddAccessoryModal'
+import ShoppingCart from './ShoppingCart'
 import { toast } from 'sonner'
 
 export default function TableComponent () {
@@ -23,6 +24,10 @@ export default function TableComponent () {
   const [isFetching, setIsFetching] = useState(true)
   const [editingQuantityAccessoryId, setEditingQuantityAccessoryId] = useState<string | null>(null)
   const [quantities, setQuantities] = useState<Record<string, number>>({})
+  const [filterValue, setFilterValue] = useState('')
+  const [sortField, setSortField] = useState<string | null>(null)
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+  const [totalAccessories, setTotalAccessories] = useState(0)
 
   console.log(selectedItems, typeof selectedItems)
 
@@ -31,11 +36,12 @@ export default function TableComponent () {
       try {
         const responseData = await fetchAccessories(currentPage, itemsPerPage)
         setAccessories(responseData.data)
+        setTotalAccessories(responseData.total) // Actualiza el estado con el total de accesorios
         setTotalPages(Math.ceil(responseData.total / itemsPerPage))
       } catch (error) {
         console.error('Error al obtener los accesorios:', error)
       } finally {
-        setIsFetching(false) // Aquí termina la carga
+        setIsFetching(false)
       }
     }
 
@@ -44,6 +50,15 @@ export default function TableComponent () {
 
   const handleEditClick = (id: string) => {
     setEditingAccessoryId(id)
+  }
+
+  const handleSortClick = (field: string) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortField(field)
+      setSortDirection('asc')
+    }
   }
 
   const handleEditSuccess = (editedAccessory: Accessory) => {
@@ -79,7 +94,9 @@ export default function TableComponent () {
   }
 
   const handleSelectionChange = (selectedItems: string[]) => {
+    console.log('estosss selectedItems', selectedItems)
     const newSelectedItems = new Set(selectedItems)
+    console.log('estosss newSelectedItems', newSelectedItems)
 
     setSelectedItems(newSelectedItems)
 
@@ -145,7 +162,9 @@ export default function TableComponent () {
       // Enviar la venta a la API
       const newSale = await createSale(saleDetails)
       console.log('Venta registrada:', newSale)
+      toast.success('Actualizando stock...')
       toast.success('Venta registrada')
+      toast.success(`Total: ${total.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}`)
       setSelectedItems(new Set())
       setQuantities({})
     } catch (error) {
@@ -154,20 +173,58 @@ export default function TableComponent () {
     }
   }
 
+  const sortedAccessories = [...accessories].sort((a, b) => {
+    if (sortField == null) return 0
+
+    const fieldA = a[sortField as keyof Accessory]
+    const fieldB = b[sortField as keyof Accessory]
+
+    if (typeof fieldA === 'string' && typeof fieldB === 'string') {
+      return sortDirection === 'asc' ? fieldA.localeCompare(fieldB) : fieldB.localeCompare(fieldA)
+    }
+
+    if (typeof fieldA === 'number' && typeof fieldB === 'number') {
+      return sortDirection === 'asc' ? fieldA - fieldB : fieldB - fieldA
+    }
+
+    // Si no podemos comparar los campos, no hacemos nada
+    return 0
+  })
+
+  const filteredAndSortedAccessories = sortedAccessories.filter(accessory =>
+    accessory.name.toLowerCase().includes(filterValue.toLowerCase())
+  )
+
   return (
     <div className="w-1/2 mx-auto pb-8">
        <div className="relative">
+       <div className="flex justify-between items-center">
 
-       <Button
-          color="primary"
-          size="sm"
-          variant="solid"
-          onClick={() => { void handleSellClick() }}
-          isDisabled={selectedItems.size === 0}
-          className="mb-4 p-3"
-      >
-          Vender
-      </Button>
+       <Input
+          isClearable
+          type="text"
+          value={filterValue}
+          onChange={e => { setFilterValue(e.target.value) }}
+          placeholder="Funda, cargador, etc..."
+          label="Buscar"
+          variant="bordered"
+          onClear={() => { setFilterValue('') } }
+          className="mb-4 w-1/2"
+        />
+
+      <div className="p-3 flex items-center justify-end space-x-4">
+            <Button
+              color="primary"
+              size="md"
+              variant="solid"
+              onClick={() => { void handleSellClick() }}
+              isDisabled={selectedItems.size === 0}
+            >
+              Vender <ShoppingCart />
+            </Button>
+            <AddAccessoryModal />
+          </div>
+          </div>
 
         <div style={{ margin: '20px auto', textAlign: 'center' }}>
         <Table
@@ -176,33 +233,63 @@ export default function TableComponent () {
             onSelectionChange={handleSelectionChange as any} // Convierte la función a any
           >
 
-          <TableHeader>
-            <TableColumn>NOMBRE</TableColumn>
-            <TableColumn>CATEGORÍA</TableColumn>
-            <TableColumn>CANTIDAD (STOCK)</TableColumn>
-            <TableColumn>PRECIO C/U</TableColumn>
-            <TableColumn>ACCIONES</TableColumn>
-          </TableHeader>
-          <TableBody>
-            {accessories.map((accessory) => (
-              <TableRow key={accessory._id}>
-                <TableCell className="flex items-center">
-                  <Image
-                    width={50}
-                    height={50}
-                    alt={accessory.name}
-                    src={accessory.imageUrl}
-                    className="mr-2" // Agrega margen a la derecha para separar la imagen y el nombre
-                  />
-                  <div className="p-2"> {/* Agrega relleno (padding) alrededor de la imagen y el nombre */}
-                    {accessory.name}
-                  </div>
-                </TableCell>
+<TableHeader>
+    <TableColumn
+        align="center"
+        onClick={() => { handleSortClick('name') }}
+        className="cursor-pointer hover:text-blue-500"
+    >
+        NOMBRE <span className="inline-block hover:visible invisible"></span>
+    </TableColumn>
+    <TableColumn
+        align="center"
+        onClick={() => { handleSortClick('category') }}
+        className="cursor-pointer hover:text-blue-500"
+    >
+        CATEGORIA <span className="inline-block hover:visible invisible"></span>
+    </TableColumn>
+    <TableColumn
+        align="center"
+        onClick={() => { handleSortClick('quantityInStock') }}
+        className="cursor-pointer hover:text-blue-500"
+    >
+        STOCK <span className="inline-block hover:visible invisible"></span>
+    </TableColumn>
+    <TableColumn
+        align="center"
+        onClick={() => { handleSortClick('price') }}
+        className="cursor-pointer hover:text-blue-500"
+    >
+        PRECIO <span className="inline-block hover:visible invisible"></span>
+    </TableColumn>
+    <TableColumn align="center">
+        ACCIONES
+    </TableColumn>
+</TableHeader>
 
-                <TableCell className='capitalize'>{accessory.category}</TableCell>
-                <TableCell>{accessory.quantityInStock}</TableCell>
-                <TableCell>{accessory.price.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</TableCell>
+          <TableBody>
+
+            {filteredAndSortedAccessories.map((accessory) => (
+              <TableRow key={accessory._id}>
+                <TableCell className="flex items-center justify-start">
+                <Image
+                  width={50}
+                  height={50}
+                  alt={accessory.name}
+                  src={accessory.imageUrl}
+                  className="mr-2"
+                />
+                <div className="p-2">
+                  {accessory.name}
+                </div>
+              </TableCell>
+
+              <TableCell className='capitalize text-left'>{accessory.category}</TableCell>
+              <TableCell className='text-left'>{accessory.quantityInStock}</TableCell>
+              <TableCell className='text-left'>{accessory.price.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</TableCell>
+
                 <TableCell>
+
                   <div className="relative flex items-center gap-2">
 
                   {selectedItems.has(accessory._id) && (
@@ -242,7 +329,12 @@ export default function TableComponent () {
           </TableBody>
         </Table>
 
+        <span className="text-default-400 text-small">
+    <br /> Total {totalAccessories} accesorios
+      </span>
+
         <div style={{ display: 'flex', justifyContent: 'center' }}>
+
         {totalPages > 1 && (
             <Pagination
               isCompact

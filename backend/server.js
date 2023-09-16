@@ -3,6 +3,8 @@ const cors = require('cors')
 require('dotenv').config({ path: './.env.local' })
 const accessoryRoutes = require('./src/routes/accessoryRoutes')
 const saleRoutes = require('./src/routes/saleRoutes')
+const clientRoutes = require('./src/routes/clientRoutes')
+const equipmentRoutes = require('./src/routes/equipmentRoutes')
 const errorHandler = require('./src/middleware/errorHandler')
 const connectToDatabase = require('./src/utils/dbConnection')
 
@@ -14,6 +16,8 @@ app.use(cors())
 
 app.use(accessoryRoutes)
 app.use(saleRoutes)
+app.use(clientRoutes)
+app.use(equipmentRoutes)
 app.use(errorHandler)
 
 app.listen(PORT, () => {

@@ -10,10 +10,13 @@ import {
   useDisclosure,
   Input,
   Select,
-  SelectItem
+  SelectItem,
+  Tooltip
 } from '@nextui-org/react'
 
 import { toast } from 'sonner'
+
+import PlusCircle from './PlusCircle'
 
 export default function AddAccessoryModal () {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
@@ -69,7 +72,10 @@ export default function AddAccessoryModal () {
   return (
     <>
       <div className="flex justify-end p-4">
-        <Button onPress={onOpen} color="primary">Agregar accesorio</Button>
+      <Tooltip content="Agregar accesorio nuevo" color="success">
+        <Button onPress={onOpen} color="success" endContent={<PlusCircle />}>
+        </Button>
+      </Tooltip>
       </div>
       <Modal backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
         <ModalContent>
@@ -77,7 +83,7 @@ export default function AddAccessoryModal () {
             <>
               <ModalHeader className="flex flex-col gap-1">Agregar Accesorio</ModalHeader>
               <ModalBody>
-              <div className="overflow-y-auto max-h-[400px]">
+              <div className="overflow-y-auto max-h-[700px]">
 
               {error !== '' && <p className="text-red-600">{error}</p>}
               <form onSubmit={(e) => { e.preventDefault(); void handleSubmit() }}>
