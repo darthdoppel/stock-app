@@ -2,12 +2,15 @@ import React, { useState } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Divider, useDisclosure, Input, Tooltip } from '@nextui-org/react'
 import { toast } from 'sonner'
 import PlusCircle from './PlusCircle'
-import { type Equipment } from './types' // Asegúrate de importar el tipo Equipment desde tu archivo types.ts
+import { type Equipment, type Client } from './types' // Asegúrate de importar el tipo Equipment desde tu archivo types.ts
+
+type WorkOrderForm = Pick<Client, 'dni'>
 
 export default function AddWorkOrderModal () {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
-  const [workOrder, setWorkOrder] = useState({})
+  const [workOrder, setWorkOrder] = useState<WorkOrderForm>({ dni: '' })
   const [error, setError] = useState('')
+  const [searchedClient, setSearchedClient] = useState<Client | null>(null)
   const [equipments, setEquipments] = useState<Array<{ type: string, brand: string, model: string, problemDescription: string }>>([])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,6 +20,15 @@ export default function AddWorkOrderModal () {
 
   const handleSubmit = async (): Promise<void> => {
     try {
+      // Obtener el ID del cliente basado en el DNI
+      const clientResponse = await fetch(`http://localhost:3000/client/dni/${workOrder.dni}`)
+
+      if (!clientResponse.ok) {
+        throw new Error('No se encontró el cliente con ese DNI.')
+      }
+
+      const clientData = await clientResponse.json()
+
       // Crear un array de identificadores de equipos
       const equipmentIds = []
 
@@ -41,6 +53,7 @@ export default function AddWorkOrderModal () {
       // Creamos un objeto que incluya la información de la orden de trabajo y los equipos
       const requestData = {
         ...workOrder,
+        client: clientData._id, // Usar el ID del cliente en la solicitud de la orden de trabajo
         equipments: equipmentIds
       }
 
@@ -90,6 +103,24 @@ export default function AddWorkOrderModal () {
     setEquipments(updatedEquipments)
   }
 
+  const handleSearchClient = async () => {
+    try {
+      const clientResponse = await fetch(`http://localhost:3000/client/dni/${workOrder.dni}`)
+      if (!clientResponse.ok) {
+        throw new Error('No se encontró el cliente con ese DNI.')
+      }
+      const clientData = await clientResponse.json()
+      setSearchedClient(clientData)
+    } catch (err) {
+      if (err instanceof Error) { // <-- Asegúrate de que err es una instancia de Error
+        toast.error((err.message.length > 0) || 'Error al buscar el cliente.')
+      } else {
+        toast.error('Error al buscar el cliente.')
+      }
+      setSearchedClient(null)
+    }
+  }
+
   return (
     <>
       <div className="flex justify-end p-4">
@@ -98,17 +129,27 @@ export default function AddWorkOrderModal () {
         </Tooltip>
       </div>
       <Modal backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
-  <ModalContent>
-    {(onClose) => (
-      <>
-        <ModalHeader className="flex flex-col gap-1">Agregar Orden de Trabajo</ModalHeader>
-        <ModalBody>
-          <div className="overflow-y-auto max-h-[500px]">
-            {error !== '' && <p className="text-red-600">{error}</p>}
-            <form onSubmit={(e) => { e.preventDefault(); void handleSubmit() }}>
+            <ModalContent>
+                {(onClose) => (
+                  <>
+                  <ModalHeader className="flex flex-col gap-1">Agregar Orden de Trabajo</ModalHeader>
+                  <ModalBody>
+                    <div className="overflow-y-auto max-h-[500px]">
+                      {error !== '' && <p className="text-red-600">{error}</p>}
+                      <form onSubmit={(e) => { e.preventDefault(); void handleSubmit() }}>
 
-              <Input isRequired name="client" label="Cliente" placeholder="Introduce el ID del cliente" onChange={handleChange} />
-              <Divider className="my-4" />
+                      <Input variant="bordered" isRequired name="dni" label="DNI del Cliente" placeholder="Introduce el DNI del cliente" onChange={handleChange} />
+                      <Button className= 'mt-4' onClick={() => { void handleSearchClient() }}>Buscar cliente</Button>
+                        {searchedClient !== null && ( // <-- Comprobación explícita
+                          <div className='mt-4'>
+                            <p><strong>Nombre:</strong> {searchedClient.firstName} {searchedClient.lastName}</p>
+                            <p><strong>Teléfono:</strong> {searchedClient.phoneNumber}</p>
+                            <p><strong>Email:</strong> {searchedClient.email}</p>
+                            {/* Puedes agregar más detalles si lo deseas */}
+                          </div>
+                        )}
+                        <Divider className="my-4" />
+
               {equipments.map((equipment, index) => (
                 <div key={index}>
                   <Input
@@ -130,8 +171,9 @@ export default function AddWorkOrderModal () {
                     value={equipment.problemDescription}
                     onChange={(e) => { handleEquipmentChange(index, 'problemDescription', e.target.value) }}
                     placeholder="Descripción del problema"
+                    className="mb-4"
                   />
-                  <Button color="danger" onClick={() => { handleRemoveEquipment(index) }}>
+                  <Button className="mb-4" color="danger" onClick={() => { handleRemoveEquipment(index) }}>
                     Eliminar
                   </Button>
                 </div>
@@ -153,7 +195,7 @@ export default function AddWorkOrderModal () {
           </div>
         </ModalBody>
       </>
-    )}
+                )}
   </ModalContent>
 </Modal>
 

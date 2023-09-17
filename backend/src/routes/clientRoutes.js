@@ -53,6 +53,21 @@ router.get('/client/:id', async (req, res) => {
   }
 })
 
+router.get('/client/dni/:dni', async (req, res) => {
+  try {
+    const dni = req.params.dni
+    const client = await Client.findOne({ dni })
+    if (!client) {
+      res.status(404).send('Cliente no encontrado')
+      return
+    }
+    res.send(client)
+  } catch (error) {
+    console.error('Error al obtener el cliente por DNI:', error)
+    res.status(500).send('Error al obtener el cliente por DNI')
+  }
+})
+
 router.patch('/client/:id', async (req, res) => {
   try {
     const id = req.params.id

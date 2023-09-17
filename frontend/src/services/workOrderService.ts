@@ -70,3 +70,35 @@ export async function deleteWorkOrder (id: string): Promise<void> {
     throw error
   }
 }
+
+export async function updateWorkOrderStatus (id: string, newStatus: string): Promise<any> {
+  try {
+    const response = await fetch(`${BASE_URL}/work-order/${id}/status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ status: newStatus })
+    })
+
+    if (!response.ok) {
+      throw new Error('Error al actualizar el estado de la orden de trabajo.')
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error('Error al actualizar el estado de la orden de trabajo:', error)
+    throw error
+  }
+}
+
+export async function fetchClientWorkOrders (clientId: string): Promise<any[]> {
+  try {
+    const response = await fetch(`${BASE_URL}/client/${clientId}/work-orders`)
+    const responseData = await response.json()
+    return responseData
+  } catch (error) {
+    console.error('Error al obtener las órdenes de trabajo del cliente:', error)
+    throw error
+  }
+}

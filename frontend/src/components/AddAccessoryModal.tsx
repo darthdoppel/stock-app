@@ -6,7 +6,6 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  Divider,
   useDisclosure,
   Input,
   Select,
@@ -88,22 +87,20 @@ export default function AddAccessoryModal () {
               {error !== '' && <p className="text-red-600">{error}</p>}
               <form onSubmit={(e) => { e.preventDefault(); void handleSubmit() }}>
 
-                  <Input isRequired name="name" label="Nombre" placeholder="Introduce el nombre del accesorio" required onChange={handleChange} />
-                  <Divider className="my-4" />
-                  <Input isRequired name="brand" label="Marca" placeholder="Introduce la marca del accesorio" onChange={handleChange} />
-                  <Divider className="my-4" />
-                  <Input isRequired name="compatiblePhoneModel" label="Modelo de teléfono compatible" placeholder="Introduce el modelo de teléfono compatible" onChange={handleChange} />
-                  <Divider className="my-4" />
-                  <Input isRequired type="number" name="quantityInStock" label="Cantidad en Stock" placeholder="Introduce la cantidad en stock" required onChange={handleChange}/>
-                  <Divider className="my-4" />
-                  <Input isRequired type="number" name="price" label="Precio" placeholder="Introduce el precio" required onChange={handleChange} />
-                  <Divider className="my-4" />
+                  <Input className="mb-4" isRequired name="name" label="Nombre" placeholder="Introduce el nombre del accesorio" required onChange={handleChange} />
+
+                  <Input className="mb-4" isRequired name="brand" label="Marca" placeholder="Introduce la marca del accesorio" onChange={handleChange} />
+
+                  <Input className="mb-4" isRequired name="compatiblePhoneModel" label="Modelo de teléfono compatible" placeholder="Introduce el modelo de teléfono compatible" onChange={handleChange} />
+
+                  <Input className="mb-4" isRequired type="number" name="price" label="Precio" placeholder="Introduce el precio" required onChange={handleChange} />
+
                 <Select isRequired
                     value={category}
                     onChange={(e) => { setCategory(e.target.value) }}
                     label="Categoría"
                     placeholder="Seleccione una categoría"
-                    className="max-w-xs"
+                    className="max-w-xs mb-4"
                     >
                     <SelectItem key="fundas" value="fundas">
                         Fundas
@@ -118,7 +115,6 @@ export default function AddAccessoryModal () {
                         Cargadores
                     </SelectItem>
                 </Select>
-                <Divider className="my-4" />
                   <Input type="url" name="imageUrl" label="URL de la imagen" placeholder="Introduce la URL de la imagen del accesorio" onChange={handleChange} />
                   {/* Puedes agregar más campos según tus necesidades */}
                   <ModalFooter>

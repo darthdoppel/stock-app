@@ -1,12 +1,15 @@
 import { useState, useEffect, type SetStateAction } from 'react'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Input, Spinner, Tooltip, Pagination } from '@nextui-org/react'
-import { type Client } from './types'
+import { type Client, type WorkOrder } from './types'
 import { EditIcon } from './EditIcon'
 import { DeleteIcon } from './DeleteIcon'
+import { EyeIcon } from './EyeIcon'
 import EditClientModal from './EditClientModal'
 import DeleteClientModal from './DeleteClientModal'
 import AddClientModal from './AddClientModal'
+import ClientWorkOrdersModal from './ClientWorkOrdersModal'
 import { fetchClients, deleteClient } from '../services/clientService'
+import { fetchClientWorkOrders } from '../services/workOrderService'
 
 export default function ClientTable () {
   const [clients, setClients] = useState<Client[]>([])
@@ -19,6 +22,9 @@ export default function ClientTable () {
   const [isFetching, setIsFetching] = useState(true)
   const [totalClients, setTotalClients] = useState(0)
   const [filterValue, setFilterValue] = useState('')
+
+  const [isWorkOrderModalOpen, setIsWorkOrderModalOpen] = useState(false)
+  const [clientWorkOrders, setClientWorkOrders] = useState<WorkOrder[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,6 +90,16 @@ export default function ClientTable () {
     ((client.dni.length > 0) && client.dni.toString().toLowerCase().includes(lowerFilterValue))
   )
 
+  const handleViewWorkOrdersClick = async (clientId: string) => {
+    try {
+      const orders = await fetchClientWorkOrders(clientId)
+      setClientWorkOrders(orders)
+      setIsWorkOrderModalOpen(true)
+    } catch (error) {
+      console.error('Error al obtener las órdenes de trabajo:', error)
+    }
+  }
+
   return (
     <div className="w-1/2 mx-auto pb-8">
       <div className="relative">
@@ -146,6 +162,15 @@ export default function ClientTable () {
                   <DeleteIcon />
                 </span>
               </Tooltip>
+              <Tooltip content="Ver órdenes de trabajo">
+              <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => {
+                void handleViewWorkOrdersClick(client._id)
+              }}>
+                    <EyeIcon />
+                  </span>
+
+              </Tooltip>
+
         </div>
       </TableCell>
     </TableRow>
@@ -195,6 +220,13 @@ export default function ClientTable () {
             setIsDeleteModalOpen(false)
           }}
         />
+
+          <ClientWorkOrdersModal
+            isOpen={isWorkOrderModalOpen}
+            onOpenChange={() => { setIsWorkOrderModalOpen(false) }}
+            workOrders={clientWorkOrders}
+          />
+
       </div>
     </div>
   )

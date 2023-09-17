@@ -6,7 +6,6 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  Divider,
   useDisclosure,
   Input,
   Tooltip
@@ -61,7 +60,7 @@ export default function AddClientModal () {
           </Button>
         </Tooltip>
       </div>
-      <Modal backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
+      <Modal scrollBehavior='outside' size='lg' backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
         <ModalContent>
           {(onClose) => (
             <>
@@ -72,17 +71,17 @@ export default function AddClientModal () {
                   {error !== '' && <p className="text-red-600">{error}</p>}
                   <form onSubmit={(e) => { e.preventDefault(); void handleSubmit() }}>
 
-                    <Input isRequired name="firstName" label="Nombre" placeholder="Introduce el nombre del cliente" onChange={handleChange} />
-                    <Divider className="my-4" />
-                    <Input isRequired name="lastName" label="Apellido" placeholder="Introduce el apellido del cliente" onChange={handleChange} />
-                    <Divider className="my-4" />
+                    <Input className="mb-4" isRequired name="firstName" label="Nombre" placeholder="Introduce el nombre del cliente" onChange={handleChange} />
+
+                    <Input className="mb-4" isRequired name="lastName" label="Apellido" placeholder="Introduce el apellido del cliente" onChange={handleChange} />
+
                     {/* Aquí está el nuevo campo para el DNI */}
-                    <Input isRequired name="dni" label="DNI" placeholder="Introduce el DNI del cliente" onChange={handleChange} />
-                    <Divider className="my-4" />
-                    <Input isRequired type="email" name="email" label="Email" placeholder="Introduce el email del cliente" onChange={handleChange} />
-                    <Divider className="my-4" />
-                    <Input isRequired type="tel" name="phoneNumber" label="Teléfono" placeholder="Introduce el teléfono del cliente" onChange={handleChange} />
-                    <Divider className="my-4" />
+                    <Input className="mb-4" isRequired name="dni" label="DNI" placeholder="Introduce el DNI del cliente" onChange={handleChange} />
+
+                    <Input className="mb-4" isRequired type="email" name="email" label="Email" placeholder="Introduce el email del cliente" onChange={handleChange} />
+
+                    <Input className="mb-4" isRequired type="tel" name="phoneNumber" label="Teléfono" placeholder="Introduce el teléfono del cliente" onChange={handleChange} />
+
                     <Input name="address" label="Dirección" placeholder="Introduce la dirección del cliente" onChange={handleChange} />
                     <ModalFooter>
                       <Button color="danger" variant="flat" onPress={onClose}>

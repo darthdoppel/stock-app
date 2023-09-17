@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Tooltip, Pagination } from '@nextui-org/react'
+import { Chip, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Tooltip, Pagination } from '@nextui-org/react'
 import { type WorkOrder } from './types' // Asegúrate de definir este tipo
 import { EditIcon } from './EditIcon'
 import { DeleteIcon } from './DeleteIcon'
 import EditWorkOrderModal from './EditWorkOrderModal' // Asegúrate de tener este componente
 import DeleteWorkOrderModal from './DeleteWorkOrderModal' // Asegúrate de tener este componente
 import AddWorkOrderModal from './AddWorkOrderModal' // Asegúrate de tener este componente
-import { fetchWorkOrders, deleteWorkOrder } from '../services/workOrderService' // Asegúrate de tener este servicio
+import { fetchWorkOrders, deleteWorkOrder, updateWorkOrderStatus } from '../services/workOrderService' // Asegúrate de tener este servicio
+import { WorkOrderStatusDropdown } from './WorkOrderStatusDropdown' // Asegúrate de tener este componente
 
 export default function WorkOrderTable () {
   const [workOrders, setWorkOrders] = useState<WorkOrder[]>([])
@@ -31,6 +32,21 @@ export default function WorkOrderTable () {
         return 'Cancelado'
       default:
         return status
+    }
+  }
+
+  const renderStatusChip = (status: string) => {
+    switch (status) {
+      case 'Pendiente':
+        return <Chip color="warning" variant="solid" size="sm">Pendiente</Chip>
+      case 'En progreso':
+        return <Chip color="primary" variant="solid" size="sm">En progreso</Chip>
+      case 'Completado':
+        return <Chip color="success" variant="solid" size="sm">Completado</Chip>
+      case 'Cancelado':
+        return <Chip color="danger" variant="solid" size="sm">Cancelado</Chip>
+      default:
+        return <Chip color="default" variant="solid" size="sm">{status}</Chip>
     }
   }
 
@@ -92,6 +108,23 @@ export default function WorkOrderTable () {
     setCurrentPage(newPage)
   }
 
+  const handleStatusChange = (workOrderId: string, newStatus: string) => {
+    updateWorkOrderStatus(workOrderId, newStatus)
+      .then(updatedWorkOrder => {
+        setWorkOrders((prevWorkOrders) =>
+          prevWorkOrders.map((workOrder) =>
+            workOrder._id === workOrderId
+              ? { ...workOrder, status: updatedWorkOrder.status }
+              : workOrder
+          )
+        )
+      })
+      .catch(error => {
+        console.error('Error al actualizar el estado de la orden de trabajo:', error)
+        // Aquí puedes manejar el error, por ejemplo, mostrando un mensaje al usuario.
+      })
+  }
+
   return (
     <div className="w-1/2 mx-auto pb-8">
       <div className="relative">
@@ -108,7 +141,8 @@ export default function WorkOrderTable () {
 <Table aria-label="Work Orders table">
   {/* Define las columnas que necesitas para las órdenes de trabajo */}
   <TableHeader>
-    <TableColumn align="center">NÚMERO DE ORDEN</TableColumn>
+  <TableColumn align="center" className="w-1/6">NÚMERO DE ORDEN</TableColumn>
+
     <TableColumn align="center">CLIENTE</TableColumn>
     <TableColumn align="center">FECHA</TableColumn>
     <TableColumn align="center">ESTADO</TableColumn>
@@ -122,7 +156,7 @@ export default function WorkOrderTable () {
           <TableCell>{workOrder.orderNumber}</TableCell>
             <TableCell>{workOrder.client.firstName} {workOrder.client.lastName}</TableCell>
             <TableCell>{new Date(workOrder.dateCreated).toLocaleDateString()}</TableCell>
-            <TableCell>{translateStatus(workOrder.status)}</TableCell>
+            <TableCell>{renderStatusChip(translateStatus(workOrder.status))}</TableCell>
             <TableCell>{(workOrder.equipments.map(eq => eq.type)).join(', ')}</TableCell>
             <TableCell>
               <div className="relative flex items-center gap-2">
@@ -136,6 +170,11 @@ export default function WorkOrderTable () {
                     <DeleteIcon />
                   </span>
                 </Tooltip>
+                <WorkOrderStatusDropdown
+                      status={workOrder.status}
+                      onStatusChange={(newStatus) => { handleStatusChange(workOrder._id, newStatus) }}
+                  />
+
               </div>
             </TableCell>
           </TableRow>

@@ -27,6 +27,9 @@ router.get('/work-orders', async (req, res) => {
 router.patch('/work-order/:id', async (req, res) => {
   try {
     const updatedWorkOrder = await WorkOrder.findByIdAndUpdate(req.params.id, req.body, { new: true })
+      .populate('client')
+      .populate('equipments')
+
     if (!updatedWorkOrder) {
       res.status(404).send('Orden de trabajo no encontrada')
     } else {
@@ -49,6 +52,39 @@ router.delete('/work-order/:id', async (req, res) => {
   } catch (error) {
     console.error('Error al eliminar la orden de trabajo:', error)
     res.status(500).send('Error al eliminar la orden de trabajo')
+  }
+})
+
+router.put('/work-order/:id/status', async (req, res) => {
+  try {
+    const { status } = req.body
+
+    const workOrder = await WorkOrder.findById(req.params.id)
+    if (!workOrder) {
+      return res.status(404).send('Orden de trabajo no encontrada')
+    }
+
+    workOrder.status = status
+    await workOrder.save()
+
+    res.json(workOrder)
+  } catch (error) {
+    console.error('Error al actualizar el estado de la orden de trabajo:', error)
+    res.status(500).send('Error al actualizar el estado de la orden de trabajo')
+  }
+})
+
+router.get('/client/:clientId/work-orders', async (req, res) => {
+  try {
+    const clientId = req.params.clientId
+    const workOrdersForClient = await WorkOrder.find({ client: clientId })
+      .populate('client')
+      .populate('equipments')
+
+    res.send(workOrdersForClient)
+  } catch (error) {
+    console.error('Error al obtener las órdenes de trabajo del cliente:', error)
+    res.status(500).send('Error al obtener las órdenes de trabajo del cliente')
   }
 })
 
