@@ -16,7 +16,8 @@ export default function EditClientModal ({ isOpen, onOpenChange, clientId, onEdi
     lastName: '',
     phoneNumber: '',
     email: '',
-    address: ''
+    address: '',
+    dni: '' // Agregar el campo dni
   })
 
   const [error, setError] = useState('')
@@ -81,6 +82,9 @@ export default function EditClientModal ({ isOpen, onOpenChange, clientId, onEdi
                 <Input name="firstName" label="Nombre" placeholder="Introduce el nombre del cliente" required onChange={handleChange} value={client.firstName} />
                 <Divider className="my-4" />
                 <Input name="lastName" label="Apellido" placeholder="Introduce el apellido del cliente" required onChange={handleChange} value={client.lastName} />
+                <Divider className="my-4" />
+                 {/* Aquí está el nuevo campo para el DNI */}
+                <Input name="dni" label="DNI" placeholder="Introduce el DNI del cliente" required onChange={handleChange} value={client.dni} />
                 <Divider className="my-4" />
                 <Input name="phone" label="Teléfono" placeholder="Introduce el teléfono del cliente" required onChange={handleChange} value={client.phoneNumber} />
                 <Divider className="my-4" />

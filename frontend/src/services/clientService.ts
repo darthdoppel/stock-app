@@ -10,11 +10,8 @@ export async function fetchClients (
     const response = await fetch(
       `${BASE_URL}/clients?page=${page}&perPage=${perPage}`
     )
-    const responseData: Client[] = await response.json()
-    return {
-      data: responseData,
-      total: responseData.length
-    }
+    const responseData: { data: Client[], total: number } = await response.json()
+    return responseData
   } catch (error) {
     console.error('Error al obtener los clientes:', error)
     throw error

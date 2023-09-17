@@ -20,6 +20,7 @@ export interface Client {
   email: string
   address: string
   dateAdded: Date
+  dni: string
 }
 
 export interface Equipment {
@@ -41,3 +42,17 @@ export interface WorkOrder {
   status: 'received' | 'in-progress' | 'completed' | 'delivered'
   orderNumber: number
 }
+
+export interface ApiResponse<T> {
+  data: T
+  total: number
+}
+
+export interface PaginatedResponse<T> {
+  data: T[]
+  total: number
+}
+
+// Ejemplo de uso:
+// ApiResponse<Client[]> para una respuesta paginada de clientes
+// ApiResponse<Accessory[]> para una respuesta paginada de accesorios

@@ -76,6 +76,9 @@ export default function AddClientModal () {
                     <Divider className="my-4" />
                     <Input isRequired name="lastName" label="Apellido" placeholder="Introduce el apellido del cliente" onChange={handleChange} />
                     <Divider className="my-4" />
+                    {/* Aquí está el nuevo campo para el DNI */}
+                    <Input isRequired name="dni" label="DNI" placeholder="Introduce el DNI del cliente" onChange={handleChange} />
+                    <Divider className="my-4" />
                     <Input isRequired type="email" name="email" label="Email" placeholder="Introduce el email del cliente" onChange={handleChange} />
                     <Divider className="my-4" />
                     <Input isRequired type="tel" name="phoneNumber" label="Teléfono" placeholder="Introduce el teléfono del cliente" onChange={handleChange} />

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Tooltip, Pagination } from '@nextui-org/react'
+import { useState, useEffect, type SetStateAction } from 'react'
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Input, Spinner, Tooltip, Pagination } from '@nextui-org/react'
 import { type Client } from './types'
 import { EditIcon } from './EditIcon'
 import { DeleteIcon } from './DeleteIcon'
@@ -18,18 +18,14 @@ export default function ClientTable () {
   const [totalPages, setTotalPages] = useState(1)
   const [isFetching, setIsFetching] = useState(true)
   const [totalClients, setTotalClients] = useState(0)
+  const [filterValue, setFilterValue] = useState('')
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const responseData = await fetchClients(currentPage, itemsPerPage)
-        if (Array.isArray(responseData.data)) {
-          setClients(responseData.data)
-        } else {
-          console.error('La respuesta de la API no es un array:', responseData.data)
-          setClients([]) // Establecer clients como un array vacío por defecto
-        }
-        setTotalClients(responseData.total)
+        setClients(responseData.data) // Acceso directo a data
+        setTotalClients(responseData.total) // Acceso directo a total
         setTotalPages(Math.ceil(responseData.total / itemsPerPage))
       } catch (error) {
         console.error('Error al obtener los clientes:', error)
@@ -76,49 +72,83 @@ export default function ClientTable () {
     setCurrentPage(newPage)
   }
 
+  const handleInputChange = (event: { target: { value: SetStateAction<string> } }) => {
+    setFilterValue(event.target.value)
+  }
+
+  const lowerFilterValue = (filterValue.length > 0) ? filterValue.toLowerCase() : ''
+
+  const filteredClients = clients.filter(client =>
+    ((client.firstName.length > 0) && client.firstName.toLowerCase().includes(lowerFilterValue)) ||
+    ((client.lastName.length > 0) && client.lastName.toLowerCase().includes(lowerFilterValue)) ||
+    ((client.dni.length > 0) && client.dni.toString().toLowerCase().includes(lowerFilterValue))
+  )
+
   return (
     <div className="w-1/2 mx-auto pb-8">
       <div className="relative">
         {/* Botón para activar el modal de agregar cliente */}
-        <div className="mb-4">
+        <div className="flex justify-between items-center mb-4">
+          <Input
+            isClearable
+            type="text"
+            value={filterValue}
+            onChange={handleInputChange}
+            placeholder="Nombre, Apellido, DNI..."
+            label="Buscar"
+            variant="bordered"
+            onClear={() => { setFilterValue('') }}
+            className="w-1/2"
+          />
 
           <AddClientModal />
         </div>
+
         {isFetching && (
           <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
             <Spinner />
           </div>
         )}
 
+    {filteredClients.length === 0
+      ? (
+              <div>No hay clientes que coincidan con la búsqueda</div>
+        )
+      : (
         <Table aria-label="Clients table">
-          <TableHeader>
-            <TableColumn align="center">NOMBRE</TableColumn>
-            <TableColumn align="center">APELLIDO</TableColumn>
-            <TableColumn align="center">TELÉFONO</TableColumn>
-            <TableColumn align="center">ACCIONES</TableColumn>
-          </TableHeader>
+        <TableHeader>
+          <TableColumn align="center"><>{'NOMBRE'}</></TableColumn>
+          <TableColumn align="center"><>{'APELLIDO'}</></TableColumn>
+          <TableColumn align="center"><>{'DNI'}</></TableColumn>
+          <TableColumn align="center"><>{'TELÉFONO'}</></TableColumn>
+          <TableColumn align="center"><>{'DIRECCIÓN'}</></TableColumn>
+          <TableColumn align="center"><>{'ACCIONES'}</></TableColumn>
+        </TableHeader>
+
           <TableBody>
-          {Array.isArray(clients)
-            ? clients.map((client) => (
-              <TableRow key={client._id}>
-                <TableCell>{client.firstName}</TableCell>
-                <TableCell>{client.lastName}</TableCell>
-                <TableCell>{client.phoneNumber}</TableCell>
-                <TableCell>
-                  <div className="relative flex items-center gap-2">
-                    <Tooltip content="Editar">
-                      <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => { handleEditClick(client._id) }}>
-                        <EditIcon />
-                      </span>
-                    </Tooltip>
-                    <Tooltip color="danger" content="Eliminar">
-                      <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={() => { handleDeleteIconClick(client._id) }}>
-                        <DeleteIcon />
-                      </span>
-                    </Tooltip>
-                  </div>
-                </TableCell>
-              </TableRow>
+          {Array.isArray(filteredClients)
+            ? filteredClients.map((client) => (
+          <TableRow key={client._id}>
+            <TableCell><>{client.firstName}</></TableCell>
+              <TableCell><>{client.lastName}</></TableCell>
+              <TableCell><>{client.dni}</></TableCell>
+              <TableCell><>{client.phoneNumber}</></TableCell>
+              <TableCell><>{client.address}</></TableCell>
+              <TableCell>
+            <div className="relative flex items-center gap-2">
+              <Tooltip content="Editar">
+                <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => { handleEditClick(client._id) }}>
+                  <EditIcon />
+                </span>
+              </Tooltip>
+              <Tooltip color="danger" content="Eliminar">
+                <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={() => { handleDeleteIconClick(client._id) }}>
+                  <DeleteIcon />
+                </span>
+              </Tooltip>
+        </div>
+      </TableCell>
+    </TableRow>
             ))
             : (
             <TableRow>
@@ -129,6 +159,7 @@ export default function ClientTable () {
               )}
           </TableBody>
         </Table>
+        )}
 
         <span className="text-default-400 text-small">
           <br /> Total {totalClients} clientes

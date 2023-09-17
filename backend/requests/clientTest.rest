@@ -1,14 +1,11 @@
-POST http://localhost:3000/client
+GET http://localhost:3000/clients
 Content-Type: application/json
 
 {
-  "firstName": "Sofía",
-  "lastName": "López",
-  "phoneNumber": "+5491178901234",
-  "email": "sofia.lopez@email.com",
-  "address": "Ruta del Sol 567, Salta, Argentina"
+  "firstName": "Carlos",
+  "lastName": "Rodríguez",
+  "dni": "56789012",
+  "phoneNumber": "+5491123456789",
+  "email": "carlos.rodriguez@gmail.com",
+  "address": "Montañas 101, Bariloche, Argentina"
 }
-
-
-
-
