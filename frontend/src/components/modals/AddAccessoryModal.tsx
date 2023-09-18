@@ -15,7 +15,7 @@ import {
 
 import { toast } from 'sonner'
 
-import PlusCircle from '../PlusCircle'
+import PlusCircle from '../../icons/PlusCircle'
 
 export default function AddAccessoryModal () {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()

@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react'
 import { Button, Image, Input, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Tooltip, Pagination } from '@nextui-org/react'
 import { type Accessory } from '../components/types'
-import { EditIcon } from '../components/EditIcon'
-import { DeleteIcon } from '../components/DeleteIcon'
+import { EditIcon } from '../icons/EditIcon'
+import { DeleteIcon } from '../icons/DeleteIcon'
 import EditAccessoryModal from '../components/modals/EditAccessoryModal'
 import DeleteAccessoryModal from '../components/modals/DeleteAccessoryModal'
 import QuantitySelectionModal from '../components/modals/QuantitySelectionModal'
 import { fetchAccessories, deleteAccessory } from '../services/accessoryService'
 import { createSale } from '../services/saleService'
 import AddAccessoryModal from '../components/modals/AddAccessoryModal'
-import ShoppingCart from '../components/ShoppingCart'
+import ShoppingCart from '../icons/ShoppingCart'
 import { toast } from 'sonner'
 
 export default function TableComponent () {

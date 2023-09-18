@@ -13,7 +13,7 @@ import {
 import { toast } from 'sonner'
 import { type Client } from '../types'
 
-import PlusCircle from '../PlusCircle'
+import PlusCircle from '../../icons/PlusCircle'
 
 interface AddClientModalProps {
   isOpen: boolean

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Divider, useDisclosure, Input, Tooltip } from '@nextui-org/react'
 import { toast } from 'sonner'
-import PlusCircle from '../PlusCircle'
+import PlusCircle from '../../icons/PlusCircle'
 import AddClientModal from './AddClientModal'
 import { type Equipment, type Client } from '../types' // Asegúrate de importar el tipo Equipment desde tu archivo types.ts
 

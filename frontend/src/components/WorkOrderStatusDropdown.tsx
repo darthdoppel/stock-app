@@ -1,5 +1,5 @@
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from '@nextui-org/react'
-import { VerticalDotsIcon } from './VerticalDotsIcon'
+import { VerticalDotsIcon } from '../icons/VerticalDotsIcon'
 import { toast } from 'sonner'
 
 interface WorkOrderStatusDropdownProps {

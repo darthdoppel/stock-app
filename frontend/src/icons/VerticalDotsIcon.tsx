@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { type IconSvgProps } from './types'
+import { type IconSvgProps } from '../components/types'
 
 export const VerticalDotsIcon = ({ size = 24, width, height, ...props }: IconSvgProps) => (
   <svg

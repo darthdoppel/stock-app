@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Chip, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Tooltip, Pagination } from '@nextui-org/react'
 import { type WorkOrder } from '../components/types' // Asegúrate de definir este tipo
-import { EditIcon } from '../components/EditIcon'
-import { DeleteIcon } from '../components/DeleteIcon'
-import { EyeIcon } from '../components/EyeIcon'
+import { EditIcon } from '../icons/EditIcon'
+import { DeleteIcon } from '../icons/DeleteIcon'
+import { EyeIcon } from '../icons/EyeIcon'
 import EditWorkOrderModal from '../components/modals/EditWorkOrderModal' // Asegúrate de tener este componente
 import DeleteWorkOrderModal from '../components/modals/DeleteWorkOrderModal' // Asegúrate de tener este componente
 import AddWorkOrderModal from '../components/modals/AddWorkOrderModal' // Asegúrate de tener este componente
