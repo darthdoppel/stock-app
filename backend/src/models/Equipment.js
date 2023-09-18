@@ -5,8 +5,9 @@ const equipmentSchema = new mongoose.Schema({
   brand: { type: String, required: true },
   model: String,
   problemDescription: { type: String, required: true },
-  repairCost: Number, // Costo estimado de la reparación∫∫
+  repairCost: Number, // Costo estimado de la reparación
   estimatedProfit: Number, // Ganancia estimada
+  materialCost: Number, // Costo de los materiales
   clientId: { type: mongoose.Schema.Types.ObjectId, ref: 'Client' }, // Referencia al cliente dueño del equipo
   dateReceived: { type: Date, default: Date.now }, // Fecha en que se recibió el equipo
   dateReturned: Date // Fecha en que el cliente recogió el equipo,

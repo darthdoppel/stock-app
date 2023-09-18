@@ -32,6 +32,7 @@ export interface Equipment {
   estimatedProfit: number
   dateReceived: Date
   dateReturned?: Date
+  materialCost: number
 }
 
 export interface WorkOrder {
