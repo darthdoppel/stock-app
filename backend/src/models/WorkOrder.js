@@ -9,17 +9,22 @@ const workOrderSchema = new mongoose.Schema({
 })
 
 // Middleware para generar el número de orden único antes de guardar
+// Middleware para generar el número de orden único antes de guardar
 workOrderSchema.pre('save', async function (next) {
   try {
     if (!this.orderNumber) {
-      // Consultar la última orden de trabajo para obtener su número de orden
-      const lastOrder = await this.constructor.findOne({}, {}, { sort: { orderNumber: -1 } })
+      // Consultar la última orden de trabajo basada en la fecha de creación
+      const lastOrder = await this.constructor.findOne({}, {}, { sort: { dateCreated: -1 } })
       let newOrderNumber = 1 // Valor predeterminado para la primera orden
       if (lastOrder && lastOrder.orderNumber) {
         // Si hay una última orden, incrementar el número
         newOrderNumber = parseInt(lastOrder.orderNumber, 10) + 1
       }
       this.orderNumber = newOrderNumber.toString() // Asignar el número de orden único
+
+      // Dentro del middleware `pre('save')`:
+      console.log('Last Order Number:', lastOrder && lastOrder.orderNumber)
+      console.log('New Order Number:', newOrderNumber)
     }
     next()
   } catch (error) {

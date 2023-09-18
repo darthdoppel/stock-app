@@ -6,16 +6,23 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  useDisclosure,
   Input,
   Tooltip
 } from '@nextui-org/react'
 
 import { toast } from 'sonner'
+import { type Client } from './types'
+
 import PlusCircle from './PlusCircle'
 
-export default function AddClientModal () {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure()
+interface AddClientModalProps {
+  isOpen: boolean
+  onOpenChange: () => void
+  showButton?: boolean
+  onClientAdded?: (client: Client) => void
+}
+
+export default function AddClientModal ({ isOpen, onOpenChange, showButton = true, onClientAdded }: AddClientModalProps) {
   const [client, setClient] = useState({})
   const [error, setError] = useState('')
 
@@ -42,6 +49,8 @@ export default function AddClientModal () {
       toast.success('Cliente agregado')
       console.log('Cliente agregado:', data)
 
+      onClientAdded?.(data) // Llama al callback si está definido
+
       onOpenChange()
     } catch (err) {
       if (err instanceof Error) {
@@ -54,12 +63,13 @@ export default function AddClientModal () {
 
   return (
     <>
-      <div className="flex justify-end p-4">
-        <Tooltip content="Agregar cliente nuevo" color="success">
-          <Button onPress={onOpen} color="success" endContent={<PlusCircle />}>
-          </Button>
-        </Tooltip>
-      </div>
+      {showButton && ( // Controla la visualización del botón con base en la prop
+        <div className="flex justify-end p-4">
+          <Tooltip content="Agregar cliente nuevo" color="success">
+          <Button onPress={onOpenChange} color="success" endContent={<PlusCircle />}></Button>
+          </Tooltip>
+        </div>
+      )}
       <Modal scrollBehavior='outside' size='lg' backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
         <ModalContent>
           {(onClose) => (

@@ -16,8 +16,22 @@ router.post('/work-order', async (req, res) => {
 
 router.get('/work-orders', async (req, res) => {
   try {
-    const workOrders = await WorkOrder.find().populate('client').populate('equipments')
-    res.send(workOrders)
+    const page = parseInt(req.query.page) || 1 // Obtén el número de página de la consulta o usa 1 como valor predeterminado
+    const perPage = parseInt(req.query.perPage) || 10 // Obtén la cantidad por página o usa 10 como valor predeterminado
+
+    const skip = (page - 1) * perPage // Calcula el número de documentos para omitir
+    const workOrders = await WorkOrder.find()
+      .populate('client')
+      .populate('equipments')
+      .skip(skip) // Omite los documentos anteriores en función de la página
+      .limit(perPage) // Limita la cantidad de documentos por página
+
+    const totalWorkOrders = await WorkOrder.countDocuments() // Cuenta el número total de documentos en la colección
+
+    res.send({
+      data: workOrders,
+      total: totalWorkOrders
+    })
   } catch (error) {
     console.error('Error al obtener las órdenes de trabajo:', error)
     res.status(500).send('Error al obtener las órdenes de trabajo')

@@ -1,9 +1,14 @@
 const BASE_URL = 'http://localhost:3000'
 
-export async function fetchWorkOrders (): Promise<any[]> {
+export async function fetchWorkOrders (
+  page: number,
+  perPage: number
+): Promise<{ data: any[], total: number }> {
   try {
-    const response = await fetch(`${BASE_URL}/work-orders`)
-    const responseData = await response.json()
+    const response = await fetch(
+      `${BASE_URL}/work-orders?page=${page}&perPage=${perPage}`
+    )
+    const responseData: { data: any[], total: number } = await response.json()
     return responseData
   } catch (error) {
     console.error('Error al obtener las órdenes de trabajo:', error)

@@ -3,9 +3,11 @@ import { Chip, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, 
 import { type WorkOrder } from './types' // Asegúrate de definir este tipo
 import { EditIcon } from './EditIcon'
 import { DeleteIcon } from './DeleteIcon'
+import { EyeIcon } from './EyeIcon'
 import EditWorkOrderModal from './EditWorkOrderModal' // Asegúrate de tener este componente
 import DeleteWorkOrderModal from './DeleteWorkOrderModal' // Asegúrate de tener este componente
 import AddWorkOrderModal from './AddWorkOrderModal' // Asegúrate de tener este componente
+import WorkOrderDetailsModal from './WorkOrderDetailsModal'
 import { fetchWorkOrders, deleteWorkOrder, updateWorkOrderStatus } from '../services/workOrderService' // Asegúrate de tener este servicio
 import { WorkOrderStatusDropdown } from './WorkOrderStatusDropdown' // Asegúrate de tener este componente
 
@@ -19,6 +21,7 @@ export default function WorkOrderTable () {
   const [totalPages, setTotalPages] = useState(1)
   const [isFetching, setIsFetching] = useState(true)
   const [totalWorkOrders, setTotalWorkOrders] = useState(0)
+  const [viewingWorkOrderId, setViewingWorkOrderId] = useState<string | null>(null)
 
   const translateStatus = (status: string) => {
     switch (status) {
@@ -53,12 +56,14 @@ export default function WorkOrderTable () {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseData = await fetchWorkOrders()
+        // Pasa currentPage y itemsPerPage como argumentos a fetchWorkOrders
+        const responseData = await fetchWorkOrders(currentPage, itemsPerPage)
 
-        if (Array.isArray(responseData)) {
-          setWorkOrders(responseData)
-          setTotalWorkOrders(responseData.length) // Esto establece el total basándose en la respuesta actual
-          setTotalPages(Math.ceil(responseData.length / itemsPerPage)) // Ajustado para trabajar con la respuesta actual
+        if (Array.isArray(responseData.data)) {
+          // Accede a la propiedad 'data' de la respuesta
+          setWorkOrders(responseData.data)
+          setTotalWorkOrders(responseData.total)
+          setTotalPages(Math.ceil(responseData.total / itemsPerPage))
         } else {
           console.error('La respuesta de la API no es un array:', responseData)
           setWorkOrders([])
@@ -125,6 +130,10 @@ export default function WorkOrderTable () {
       })
   }
 
+  const handleViewDetailsClick = (id: string) => {
+    setViewingWorkOrderId(id)
+  }
+
   return (
     <div className="w-1/2 mx-auto pb-8">
       <div className="relative">
@@ -146,7 +155,6 @@ export default function WorkOrderTable () {
     <TableColumn align="center">CLIENTE</TableColumn>
     <TableColumn align="center">FECHA</TableColumn>
     <TableColumn align="center">ESTADO</TableColumn>
-    <TableColumn align="center">EQUIPOS</TableColumn>
     <TableColumn align="center">ACCIONES</TableColumn>
   </TableHeader>
   <TableBody>
@@ -157,9 +165,14 @@ export default function WorkOrderTable () {
             <TableCell>{workOrder.client.firstName} {workOrder.client.lastName}</TableCell>
             <TableCell>{new Date(workOrder.dateCreated).toLocaleDateString()}</TableCell>
             <TableCell>{renderStatusChip(translateStatus(workOrder.status))}</TableCell>
-            <TableCell>{(workOrder.equipments.map(eq => eq.type)).join(', ')}</TableCell>
             <TableCell>
               <div className="relative flex items-center gap-2">
+
+              <Tooltip content="Ver detalles">
+              <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => { handleViewDetailsClick(workOrder._id) }}>
+                <EyeIcon />
+              </span>
+            </Tooltip>
                 <Tooltip content="Editar">
                   <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => { handleEditClick(workOrder._id) }}>
                     <EditIcon />
@@ -170,10 +183,14 @@ export default function WorkOrderTable () {
                     <DeleteIcon />
                   </span>
                 </Tooltip>
-                <WorkOrderStatusDropdown
-                      status={workOrder.status}
-                      onStatusChange={(newStatus) => { handleStatusChange(workOrder._id, newStatus) }}
-                  />
+                <Tooltip content="Cambiar estado">
+                    <div>
+                        <WorkOrderStatusDropdown
+                              status={workOrder.status}
+                              onStatusChange={(newStatus) => { handleStatusChange(workOrder._id, newStatus) }}
+                          />
+                    </div>
+                </Tooltip>
 
               </div>
             </TableCell>
@@ -223,6 +240,15 @@ export default function WorkOrderTable () {
             setIsDeleteModalOpen(false)
           }}
         />
+
+          {(viewingWorkOrderId != null) && (
+            <WorkOrderDetailsModal
+            isOpen={viewingWorkOrderId !== null}
+            onOpenChange={() => { setViewingWorkOrderId(null) }}
+            workOrder={workOrders.find(order => order._id === viewingWorkOrderId)}
+          />
+
+          )}
       </div>
     </div>
   )

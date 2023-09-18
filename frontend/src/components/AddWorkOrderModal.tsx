@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Divider, useDisclosure, Input, Tooltip } from '@nextui-org/react'
 import { toast } from 'sonner'
 import PlusCircle from './PlusCircle'
+import AddClientModal from './AddClientModal'
 import { type Equipment, type Client } from './types' // Asegúrate de importar el tipo Equipment desde tu archivo types.ts
 
 type WorkOrderForm = Pick<Client, 'dni'>
@@ -10,6 +11,8 @@ export default function AddWorkOrderModal () {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const [workOrder, setWorkOrder] = useState<WorkOrderForm>({ dni: '' })
   const [error, setError] = useState('')
+  const [isClientModalOpen, setClientModalOpen] = useState(false)
+
   const [searchedClient, setSearchedClient] = useState<Client | null>(null)
   const [equipments, setEquipments] = useState<Array<{ type: string, brand: string, model: string, problemDescription: string }>>([])
 
@@ -103,6 +106,10 @@ export default function AddWorkOrderModal () {
     setEquipments(updatedEquipments)
   }
 
+  const handleCloseClientModal = () => {
+    setClientModalOpen(false)
+  }
+
   const handleSearchClient = async () => {
     try {
       const clientResponse = await fetch(`http://localhost:3000/client/dni/${workOrder.dni}`)
@@ -111,14 +118,25 @@ export default function AddWorkOrderModal () {
       }
       const clientData = await clientResponse.json()
       setSearchedClient(clientData)
-    } catch (err) {
-      if (err instanceof Error) { // <-- Asegúrate de que err es una instancia de Error
+    } catch (err: any) { // <-- Cambio aquí
+      if (err instanceof Error) {
         toast.error((err.message.length > 0) || 'Error al buscar el cliente.')
       } else {
         toast.error('Error al buscar el cliente.')
       }
+      if (err.message === 'No se encontró el cliente con ese DNI.') {
+        toast.error('No se encontró el cliente con ese DNI.') // Mostramos el mensaje de error
+        setClientModalOpen(true) // Abre el modal de agregar cliente
+      }
       setSearchedClient(null)
     }
+  }
+
+  const handleClientAdded = (newClient: Client) => {
+    setSearchedClient(newClient)
+    setWorkOrder(prev => ({ ...prev, dni: newClient.dni }))
+    void handleSearchClient() // Realiza la búsqueda para mostrar el cliente
+    handleCloseClientModal() // Cierra el modal AddClientModal
   }
 
   return (
@@ -128,7 +146,7 @@ export default function AddWorkOrderModal () {
           <Button onPress={onOpen} color="success" endContent={<PlusCircle />}></Button>
         </Tooltip>
       </div>
-      <Modal backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
+      <Modal size="xl" backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
             <ModalContent>
                 {(onClose) => (
                   <>
@@ -198,6 +216,13 @@ export default function AddWorkOrderModal () {
                 )}
   </ModalContent>
 </Modal>
+
+      <AddClientModal
+        isOpen={isClientModalOpen}
+        onOpenChange={handleCloseClientModal}
+        showButton={false}
+        onClientAdded={handleClientAdded} // Pasa el callback aquí
+      />
 
     </>
   )
