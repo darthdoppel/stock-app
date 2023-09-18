@@ -38,7 +38,25 @@ router.get('/work-orders', async (req, res) => {
   }
 })
 
+router.get('/work-order/:id', async (req, res) => {
+  try {
+    const workOrder = await WorkOrder.findById(req.params.id)
+      .populate('client')
+      .populate('equipments')
+
+    if (!workOrder) {
+      return res.status(404).send('Orden de trabajo no encontrada')
+    }
+
+    res.send(workOrder)
+  } catch (error) {
+    console.error('Error al obtener la orden de trabajo:', error)
+    res.status(500).send('Error al obtener la orden de trabajo')
+  }
+})
+
 router.patch('/work-order/:id', async (req, res) => {
+  console.log('Datos recibidos para actualización:', req.body)
   try {
     const updatedWorkOrder = await WorkOrder.findByIdAndUpdate(req.params.id, req.body, { new: true })
       .populate('client')

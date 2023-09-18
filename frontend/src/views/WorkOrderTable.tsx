@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Chip, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Tooltip, Pagination } from '@nextui-org/react'
 import { type WorkOrder } from '../components/types' // Asegúrate de definir este tipo
-import { EditIcon } from '../icons/EditIcon'
 import { DeleteIcon } from '../icons/DeleteIcon'
 import { EyeIcon } from '../icons/EyeIcon'
-import EditWorkOrderModal from '../components/modals/EditWorkOrderModal' // Asegúrate de tener este componente
 import DeleteWorkOrderModal from '../components/modals/DeleteWorkOrderModal' // Asegúrate de tener este componente
 import AddWorkOrderModal from '../components/modals/AddWorkOrderModal' // Asegúrate de tener este componente
 import WorkOrderDetailsModal from '../components/modals/WorkOrderDetailsModal'
@@ -13,7 +11,6 @@ import { WorkOrderStatusDropdown } from '../components/WorkOrderStatusDropdown' 
 
 export default function WorkOrderTable () {
   const [workOrders, setWorkOrders] = useState<WorkOrder[]>([])
-  const [editingWorkOrderId, setEditingWorkOrderId] = useState<string | null>(null)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [deletingWorkOrderId, setDeletingWorkOrderId] = useState<string | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
@@ -79,19 +76,6 @@ export default function WorkOrderTable () {
 
     void fetchData()
   }, [currentPage, itemsPerPage])
-
-  const handleEditClick = (id: string) => {
-    setEditingWorkOrderId(id)
-  }
-
-  const handleEditSuccess = (editedWorkOrder: WorkOrder) => {
-    setWorkOrders((prevWorkOrders) =>
-      prevWorkOrders.map((workOrder) =>
-        workOrder._id === editedWorkOrder._id ? editedWorkOrder : workOrder
-      )
-    )
-    setEditingWorkOrderId(null)
-  }
 
   const handleDeleteIconClick = (id: string) => {
     setDeletingWorkOrderId(id)
@@ -169,11 +153,6 @@ export default function WorkOrderTable () {
                 <EyeIcon />
               </span>
             </Tooltip>
-                <Tooltip content="Editar">
-                  <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => { handleEditClick(workOrder._id) }}>
-                    <EditIcon />
-                  </span>
-                </Tooltip>
                 <Tooltip color="danger" content="Eliminar">
                   <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={() => { handleDeleteIconClick(workOrder._id) }}>
                     <DeleteIcon />
@@ -222,15 +201,6 @@ export default function WorkOrderTable () {
                         <Spinner color="success" size='lg'/>
                       </div>
             )}
-
-        {(editingWorkOrderId != null) && (
-          <EditWorkOrderModal
-            isOpen={editingWorkOrderId !== null}
-            onOpenChange={() => { setEditingWorkOrderId(null) }}
-            workOrderId={editingWorkOrderId}
-            onEditSuccess={(editedWorkOrder) => { handleEditSuccess(editedWorkOrder) }}
-          />
-        )}
 
         <DeleteWorkOrderModal
           isOpen={isDeleteModalOpen}
