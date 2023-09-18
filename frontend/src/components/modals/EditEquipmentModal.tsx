@@ -1,15 +1,7 @@
-import React, { useState } from 'react'
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input } from '@nextui-org/react'
+import React, { useState, useEffect } from 'react'
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Select, SelectItem } from '@nextui-org/react'
 import { toast } from 'sonner'
-
-interface Equipment {
-  _id: string
-  type: string
-  brand: string
-  model: string
-  problemDescription: string
-  // ... puedes agregar más campos si tu modelo de Equipment los tiene
-}
+import { type Equipment } from '../types'
 
 interface EditEquipmentModalProps {
   isOpen: boolean
@@ -19,28 +11,38 @@ interface EditEquipmentModalProps {
 }
 
 const EditEquipmentModal: React.FC<EditEquipmentModalProps> = ({ isOpen, onOpenChange, equipment, onEditSuccess }) => {
-  const [changes, setChanges] = useState<Record<string, { value: string | undefined, modified: boolean }>>({})
+  const [selectedType, setSelectedType] = useState('')
+  const [changes, setChanges] = useState<Partial<Equipment>>({})
   const [error, setError] = useState('')
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setChanges((prev) => ({
-      ...prev,
-      [name]: {
-        value,
-        modified: true
-      }
-    }))
-  }
+  const equipmentTypeOptions = ['Notebook', 'Celular', 'Tablet', 'Otros']
 
-  const getUpdatedValues = () => {
-    const updates: Partial<Equipment> = {}
-    for (const key in changes) {
-      if (changes[key].modified) {
-        updates[key] = changes[key].value
+  useEffect(() => {
+    const fetchEquipment = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/equipment/${equipment._id}`)
+        const data = await response.json()
+
+        console.log('Data obtenida:', data) // Añade este log
+
+        setChanges(data)
+        setSelectedType(data.type) // Actualizar el tipo seleccionado aquí
+      } catch (error) {
+        console.error('Error al cargar el equipo:', error)
       }
     }
-    return updates
+
+    if (isOpen) {
+      void fetchEquipment()
+    }
+  }, [isOpen, equipment._id])
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setChanges((prevChanges) => ({
+      ...prevChanges,
+      [name]: value
+    }))
   }
 
   const handleSubmit = async () => {
@@ -50,7 +52,7 @@ const EditEquipmentModal: React.FC<EditEquipmentModalProps> = ({ isOpen, onOpenC
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(getUpdatedValues())
+        body: JSON.stringify({ ...changes, type: selectedType }) // Incluir el tipo seleccionado
       })
 
       if (!response.ok) {
@@ -75,13 +77,50 @@ const EditEquipmentModal: React.FC<EditEquipmentModalProps> = ({ isOpen, onOpenC
       <ModalContent>
         <ModalHeader>Editar Equipo</ModalHeader>
         <ModalBody>
-          {(error.length > 0) && <p className="text-red-600">{error}</p>}
+          {error.length > 0 && <p className="text-red-600">{error}</p>}
           <form onSubmit={(e) => { e.preventDefault(); void handleSubmit() }}>
-            <Input name="type" label="Tipo" placeholder="Tipo de equipo" onChange={handleChange} value={changes.type?.modified ? changes.type.value : equipment.type}
- />
-            <Input name="brand" label="Marca" placeholder="Marca del equipo" onChange={handleChange} value={changes.brand?.modified ? changes.brand.value : equipment.brand} />
-            <Input name="model" label="Modelo" placeholder="Modelo del equipo" onChange={handleChange} value={changes.model?.modified ? changes.model.value : equipment.model} />
-            <Input name="problemDescription" label="Descripción del Problema" placeholder="Descripción del problema" onChange={handleChange} value={changes.problemDescription?.modified ? changes.problemDescription.value : equipment.problemDescription} />
+
+          <Select
+              name="type"
+              label="Tipo"
+              placeholder="Seleccione el tipo de equipo"
+              selectedKeys={new Set([selectedType])}
+              onSelectionChange={(newSelection) => {
+                const selectedValue = [...newSelection][0]
+                if (typeof selectedValue === 'string') {
+                  setSelectedType(selectedValue)
+                }
+              }}
+>
+
+              {equipmentTypeOptions.map((type) => (
+                <SelectItem key={type} value={type}>
+                  {type}
+                </SelectItem>
+              ))}
+            </Select>
+
+            <Input
+              name="brand"
+              label="Marca"
+              placeholder="Marca del equipo"
+              onChange={handleChange}
+              value={changes.brand !== null && changes.brand !== '' ? changes.brand : equipment.brand}
+              />
+            <Input
+              name="model"
+              label="Modelo"
+              placeholder="Modelo del equipo"
+              onChange={handleChange}
+              value={changes.model !== null && changes.model !== '' ? changes.model : equipment.model}
+            />
+            <Input
+              name="problemDescription"
+              label="Descripción del Problema"
+              placeholder="Descripción del problema"
+              onChange={handleChange}
+              value={changes.problemDescription !== null && changes.problemDescription !== '' ? changes.problemDescription : equipment.problemDescription}
+            />
 
             <ModalFooter>
               <Button color="danger" variant="flat" onClick={onOpenChange}>

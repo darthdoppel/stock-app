@@ -139,25 +139,25 @@ export default function EditAccessoryModal ({ isOpen, onOpenChange, accessoryId,
                   <Divider className="my-4" />
 
                   <Select
-    label="Categoría"
-    variant="bordered"
-    placeholder="Seleccione una categoría"
-    selectedKeys={new Set([category])}
-    onSelectionChange={(newSelection) => {
-      const selectedCategory = [...newSelection][0]
-      if (typeof selectedCategory === 'string') {
-        setCategory(selectedCategory)
-      }
-    }}
+                      label="Categoría"
+                      variant="bordered"
+                      placeholder="Seleccione una categoría"
+                      selectedKeys={new Set([category])}
+                      onSelectionChange={(newSelection) => {
+                        const selectedCategory = [...newSelection][0]
+                        if (typeof selectedCategory === 'string') {
+                          setCategory(selectedCategory)
+                        }
+                      }}
 
-    className="max-w-xs"
->
-    {categories.map((cat) => (
-        <SelectItem key={cat.value} value={cat.value}>
-            {cat.label}
-        </SelectItem>
-    ))}
-</Select>
+                      className="max-w-xs"
+                  >
+                      {categories.map((cat) => (
+                          <SelectItem key={cat.value} value={cat.value}>
+                              {cat.label}
+                          </SelectItem>
+                      ))}
+                  </Select>
 
                 <Divider className="my-4" />
                   <Input type="url" name="imageUrl" label="URL de la imagen" placeholder="Introduce la URL de la imagen del accesorio" onChange={handleChange} value={accessory.imageUrl} />

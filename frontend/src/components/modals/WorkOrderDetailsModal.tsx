@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Card, CardBody, Tooltip } from '@nextui-org/react'
+import { Divider, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Card, CardBody, Tooltip } from '@nextui-org/react'
 import { type WorkOrder, type Equipment } from '../types'
 import EditEquipmentModal from './EditEquipmentModal'
 import EditCostModal from './EditCostModal'
 import { EditIcon } from '../../icons/EditIcon'
+import AddEquipmentModal from './AddEquipmentModal'
 
 interface WorkOrderDetailsModalProps {
   isOpen: boolean
@@ -16,6 +17,7 @@ const WorkOrderDetailsModal: React.FC<WorkOrderDetailsModalProps> = ({ isOpen, o
   const [isEditEquipmentModalOpen, setIsEditEquipmentModalOpen] = useState(false)
   const [isEditCostModalOpen, setIsEditCostModalOpen] = useState(false)
   const [currentEquipment, setCurrentEquipment] = useState<null | Equipment>(null)
+  const [isAddEquipmentModalOpen, setIsAddEquipmentModalOpen] = useState(false)
 
   const openEditEquipmentModal = (equipment: React.SetStateAction<Equipment | null>) => {
     setCurrentEquipment(equipment)
@@ -25,6 +27,11 @@ const WorkOrderDetailsModal: React.FC<WorkOrderDetailsModalProps> = ({ isOpen, o
   const openEditCostModal = (equipment: React.SetStateAction<Equipment | null>) => {
     setCurrentEquipment(equipment)
     setIsEditCostModalOpen(true)
+  }
+
+  const handleAddEquipment = (newEquipment: Equipment) => {
+    workOrder.equipments.push(newEquipment) // Añade el nuevo equipo a la orden
+    setIsAddEquipmentModalOpen(false) // Cierra el modal de agregar equipo
   }
 
   return (
@@ -40,31 +47,36 @@ const WorkOrderDetailsModal: React.FC<WorkOrderDetailsModalProps> = ({ isOpen, o
                   <p className="mb-2"><strong>Marca:</strong> {equipment.brand}</p>
                   <p className="mb-2"><strong>Modelo:</strong> {equipment.model}</p>
                   <p className="mb-2"><strong>Descripción del Problema:</strong> {equipment.problemDescription}</p>
+
+                  <Divider className="my-4" />
+
                   <p className="mb-2">
                     <strong>Costo de Materiales:</strong>&nbsp;
                     {
-                      isNaN(equipment.materialCost)
+                      equipment.materialCost === undefined || isNaN(equipment.materialCost)
                         ? 'No especificado'
                         : new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(equipment.materialCost)
                     }
+
                   </p>
 
-                    <p className="mb-2">
+                  <p className="mb-2">
                       <strong>Costo al Cliente:</strong>&nbsp;
                       {
-                        isNaN(equipment.repairCost)
+                        equipment.repairCost === undefined || isNaN(equipment.repairCost)
                           ? 'No especificado'
                           : new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(equipment.repairCost)
                       }
-                    </p>
-                    <p className="mb-2">
+                  </p>
+
+                  <p className="mb-2">
                       <strong>Ganancia Estimada:</strong>&nbsp;
                       {
-                        isNaN(equipment.estimatedProfit)
+                        equipment.estimatedProfit === undefined || isNaN(equipment.estimatedProfit)
                           ? 'No especificado'
                           : new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(equipment.estimatedProfit)
                       }
-                    </p>
+                  </p>
 
                   <div className="inline-block mt-6">
                     <Tooltip content="Editar detalles del equipo">
@@ -85,21 +97,30 @@ const WorkOrderDetailsModal: React.FC<WorkOrderDetailsModalProps> = ({ isOpen, o
             ))}
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" variant="flat" onClick={onOpenChange}>
-              Cerrar
-            </Button>
+              <Button color="secondary" onClick={() => { setIsAddEquipmentModalOpen(true) }}>
+                  Añadir Equipo
+              </Button>
+              <Button color="primary" variant="flat" onClick={onOpenChange}>
+                  Cerrar
+              </Button>
           </ModalFooter>
+
         </ModalContent>
       </Modal>
 
-      {currentEquipment && (
+      <AddEquipmentModal
+              isOpen={isAddEquipmentModalOpen}
+              onOpenChange={() => { setIsAddEquipmentModalOpen(!isAddEquipmentModalOpen) }}
+              onEquipmentAdded={handleAddEquipment}
+          />
+
+      {currentEquipment !== null && currentEquipment !== undefined && (
         <>
           <EditEquipmentModal
             isOpen={isEditEquipmentModalOpen}
             onOpenChange={() => { setIsEditEquipmentModalOpen(!isEditEquipmentModalOpen) }}
             equipment={currentEquipment}
             onEditSuccess={(editedEquipment) => {
-              console.log('Equipo editado con éxito')
               const updatedEquipments = workOrder.equipments.map((equipment) =>
                 equipment._id === editedEquipment._id ? editedEquipment : equipment
               )
@@ -107,12 +128,12 @@ const WorkOrderDetailsModal: React.FC<WorkOrderDetailsModalProps> = ({ isOpen, o
               setCurrentEquipment(null) // Opcional: para resetear el equipo seleccionado.
             }}
           />
+
           <EditCostModal
             isOpen={isEditCostModalOpen}
             onOpenChange={() => { setIsEditCostModalOpen(!isEditCostModalOpen) }}
             equipment={currentEquipment}
             onEditSuccess={(editedEquipment) => {
-              console.log('Costos editados con éxito')
               const updatedEquipments = workOrder.equipments.map((equipment) =>
                 equipment._id === editedEquipment._id ? editedEquipment : equipment
               )

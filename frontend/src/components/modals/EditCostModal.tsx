@@ -1,13 +1,7 @@
 import React, { useState } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input } from '@nextui-org/react'
 import { toast } from 'sonner'
-
-interface Equipment {
-  _id: string
-  repairCost: number
-  estimatedProfit: number
-  materialCost: number
-}
+import { type Equipment } from '../types'
 
 interface EditCostModalProps {
   isOpen: boolean
@@ -37,18 +31,24 @@ const EditCostModal: React.FC<EditCostModalProps> = ({ isOpen, onOpenChange, equ
     let materialCost = equipment.materialCost
 
     if (changes.repairCost?.modified) {
-      repairCost = parseFloat(changes.repairCost.value || '0')
+      repairCost = parseFloat(changes.repairCost.value ?? '0')
       updates.repairCost = repairCost
     }
 
     if (changes.materialCost?.modified) {
-      materialCost = parseFloat(changes.materialCost.value || '0')
+      materialCost = parseFloat(changes.materialCost.value ?? '0')
       updates.materialCost = materialCost
     }
 
     // Calculamos la ganancia estimada
     updates.estimatedProfit = repairCost - materialCost
     return updates
+  }
+
+  const calculateEstimatedProfit = () => {
+    const repair = Number(changes.repairCost?.value ?? equipment.repairCost ?? 0)
+    const material = Number(changes.materialCost?.value ?? equipment.materialCost ?? 0)
+    return repair - material
   }
 
   const handleSubmit = async () => {
@@ -87,7 +87,7 @@ const EditCostModal: React.FC<EditCostModalProps> = ({ isOpen, onOpenChange, equ
           <form onSubmit={(e) => { e.preventDefault(); void handleSubmit() }}>
             <Input name="repairCost" label="Costo de Reparación" placeholder="Costo de reparación" type="number" onChange={handleChange} value={changes.repairCost?.modified ? changes.repairCost.value : equipment.repairCost?.toString()} />
             <Input name="materialCost" label="Costo de Materiales" placeholder="Costo de materiales" type="number" onChange={handleChange} value={changes.materialCost?.modified ? changes.materialCost.value : equipment.materialCost?.toString()} />
-            <p className="mt-4"><strong>Ganancia Estimada:</strong> ${(equipment.repairCost - equipment.materialCost).toFixed(2)}</p>
+            <p className="mt-4"><strong>Ganancia Estimada:</strong> ${calculateEstimatedProfit().toFixed(2)}</p>
 
             <ModalFooter>
               <Button color="danger" variant="flat" onClick={onOpenChange}>

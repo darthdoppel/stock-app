@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const equipmentSchema = new mongoose.Schema({
-  type: { type: String, required: true, enum: ['notebook', 'celular', 'tablet', 'otros'] },
+  type: { type: String, required: true, enum: ['Notebook', 'Celular', 'Tablet', 'Otros'] },
   brand: { type: String, required: true },
   model: String,
   problemDescription: { type: String, required: true },

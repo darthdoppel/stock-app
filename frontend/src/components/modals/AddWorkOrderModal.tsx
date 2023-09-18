@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Divider, useDisclosure, Input, Tooltip } from '@nextui-org/react'
+import { Select, SelectItem, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Divider, useDisclosure, Input, Tooltip } from '@nextui-org/react'
 import { toast } from 'sonner'
 import PlusCircle from '../../icons/PlusCircle'
 import AddClientModal from './AddClientModal'
@@ -12,9 +12,11 @@ export default function AddWorkOrderModal () {
   const [workOrder, setWorkOrder] = useState<WorkOrderForm>({ dni: '' })
   const [error, setError] = useState('')
   const [isClientModalOpen, setClientModalOpen] = useState(false)
-
   const [searchedClient, setSearchedClient] = useState<Client | null>(null)
   const [equipments, setEquipments] = useState<Array<{ type: string, brand: string, model: string, problemDescription: string }>>([])
+
+  // Opciones del enum "type"
+  const equipmentTypeOptions = ['Notebook', 'Celular', 'Tablet', 'Otros']
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -88,7 +90,19 @@ export default function AddWorkOrderModal () {
   }
 
   const handleAddEquipment = () => {
-    setEquipments(prevEquipments => [...prevEquipments, { type: '', brand: '', model: '', problemDescription: '' }])
+    setEquipments((prevEquipments) => [
+      ...prevEquipments,
+      { type: 'notebook', brand: '', model: '', problemDescription: '' } // Valor predeterminado 'notebook'
+    ])
+  }
+
+  const handleEquipmentTypeChange = (index: number, value: string) => {
+    const updatedEquipments = [...equipments]
+    updatedEquipments[index] = {
+      ...updatedEquipments[index],
+      type: value // Actualiza el tipo de equipo
+    }
+    setEquipments(updatedEquipments)
   }
 
   const handleEquipmentChange = (index: number, field: keyof Equipment, value: string) => {
@@ -147,34 +161,39 @@ export default function AddWorkOrderModal () {
         </Tooltip>
       </div>
       <Modal size="xl" backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
-            <ModalContent>
-                {(onClose) => (
-                  <>
-                  <ModalHeader className="flex flex-col gap-1">Agregar Orden de Trabajo</ModalHeader>
-                  <ModalBody>
-                    <div className="overflow-y-auto max-h-[500px]">
-                      {error !== '' && <p className="text-red-600">{error}</p>}
-                      <form onSubmit={(e) => { e.preventDefault(); void handleSubmit() }}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">Agregar Orden de Trabajo</ModalHeader>
+              <ModalBody>
+                <div className="overflow-y-auto max-h-[500px]">
+                  {error !== '' && <p className="text-red-600">{error}</p>}
+                  <form onSubmit={(e) => { e.preventDefault(); void handleSubmit() }}>
+                    <Input variant="bordered" isRequired name="dni" label="DNI del Cliente" placeholder="Introduce el DNI del cliente" onChange={handleChange} />
+                    <Button className="mt-4" onClick={() => { void handleSearchClient() }}>Buscar cliente</Button>
+                    {searchedClient !== null && (
+                      <div className="mt-4">
+                        <p><strong>Nombre:</strong> {searchedClient.firstName} {searchedClient.lastName}</p>
+                        <p><strong>Teléfono:</strong> {searchedClient.phoneNumber}</p>
+                        <p><strong>Email:</strong> {searchedClient.email}</p>
+                      </div>
+                    )}
+                    <Divider className="my-4" />
 
-                      <Input variant="bordered" isRequired name="dni" label="DNI del Cliente" placeholder="Introduce el DNI del cliente" onChange={handleChange} />
-                      <Button className= 'mt-4' onClick={() => { void handleSearchClient() }}>Buscar cliente</Button>
-                        {searchedClient !== null && ( // <-- Comprobación explícita
-                          <div className='mt-4'>
-                            <p><strong>Nombre:</strong> {searchedClient.firstName} {searchedClient.lastName}</p>
-                            <p><strong>Teléfono:</strong> {searchedClient.phoneNumber}</p>
-                            <p><strong>Email:</strong> {searchedClient.email}</p>
-                            {/* Puedes agregar más detalles si lo deseas */}
-                          </div>
-                        )}
-                        <Divider className="my-4" />
-
-              {equipments.map((equipment, index) => (
+                {equipments.map((equipment, index) => (
                 <div key={index}>
-                  <Input
-                    value={equipment.type}
-                    onChange={(e) => { handleEquipmentChange(index, 'type', e.target.value) }}
-                    placeholder="Tipo de equipo"
-                  />
+                <Select
+                      value={equipment.type}
+                      onChange={(e) => { handleEquipmentTypeChange(index, e.target.value) }}
+                      label="Seleccione el tipo de equipo"
+                      placeholder="Seleccione una opción"
+                      >
+                      {equipmentTypeOptions.map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
+                      </Select>
                   <Input
                     value={equipment.brand}
                     onChange={(e) => { handleEquipmentChange(index, 'brand', e.target.value) }}
@@ -195,35 +214,35 @@ export default function AddWorkOrderModal () {
                     Eliminar
                   </Button>
                 </div>
-              ))}
-              <Button color="primary" onClick={handleAddEquipment}>
-                Añadir equipo
-              </Button>
-              <Divider className="my-4" />
+                ))}
 
-              <ModalFooter>
-                <Button color="danger" variant="flat" onPress={onClose}>
-                  Cerrar
-                </Button>
-                <Button type="submit" color="primary">
-                  Guardar
-                </Button>
-              </ModalFooter>
-            </form>
-          </div>
-        </ModalBody>
-      </>
-                )}
-  </ModalContent>
-</Modal>
+                    <Button color="primary" onClick={handleAddEquipment}>
+                      Añadir equipo
+                    </Button>
+                    <Divider className="my-4" />
+
+                    <ModalFooter>
+                      <Button color="danger" variant="flat" onPress={onClose}>
+                        Cerrar
+                      </Button>
+                      <Button type="submit" color="primary">
+                        Guardar
+                      </Button>
+                    </ModalFooter>
+                  </form>
+                </div>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
 
       <AddClientModal
         isOpen={isClientModalOpen}
         onOpenChange={handleCloseClientModal}
         showButton={false}
-        onClientAdded={handleClientAdded} // Pasa el callback aquí
+        onClientAdded={handleClientAdded}
       />
-
     </>
   )
 }

@@ -24,15 +24,16 @@ export interface Client {
 }
 
 export interface Equipment {
-  type: 'notebook' | 'celular' | 'tablet' | 'otros'
+  _id?: string
+  type: 'Notebook' | 'Celular' | 'Tablet' | 'Otros'
   brand: string
   model: string
   problemDescription: string
-  repairCost: number
-  estimatedProfit: number
-  dateReceived: Date
+  repairCost?: number
+  estimatedProfit?: number
+  dateReceived?: Date
   dateReturned?: Date
-  materialCost: number
+  materialCost?: number
 }
 
 export interface WorkOrder {

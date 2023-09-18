@@ -1,5 +1,6 @@
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from '@nextui-org/react'
 import { useLocation } from 'react-router-dom'
+import { ThemeSwitcher } from './ThemeSwitcher'
 
 export default function NavBar () {
   const location = useLocation()
@@ -36,7 +37,8 @@ export default function NavBar () {
           </Link>
         </NavbarItem>
       </NavbarContent>
-      <NavbarContent justify="end">
+      <NavbarContent justify="end" className="flex items-center"> {/* Agrega la clase flex y items-center */}
+        <ThemeSwitcher /> {/* Agrega el ThemeSwitcher aquí */}
         <NavbarItem className="hidden lg:flex">
           <Link color="foreground" href="#">Login</Link>
         </NavbarItem>
