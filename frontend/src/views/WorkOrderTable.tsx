@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react'
 import { Chip, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Tooltip, Pagination } from '@nextui-org/react'
-import { type WorkOrder } from './types' // Asegúrate de definir este tipo
-import { EditIcon } from './EditIcon'
-import { DeleteIcon } from './DeleteIcon'
-import { EyeIcon } from './EyeIcon'
-import EditWorkOrderModal from './EditWorkOrderModal' // Asegúrate de tener este componente
-import DeleteWorkOrderModal from './DeleteWorkOrderModal' // Asegúrate de tener este componente
-import AddWorkOrderModal from './AddWorkOrderModal' // Asegúrate de tener este componente
-import WorkOrderDetailsModal from './WorkOrderDetailsModal'
+import { type WorkOrder } from '../components/types' // Asegúrate de definir este tipo
+import { EditIcon } from '../components/EditIcon'
+import { DeleteIcon } from '../components/DeleteIcon'
+import { EyeIcon } from '../components/EyeIcon'
+import EditWorkOrderModal from '../components/modals/EditWorkOrderModal' // Asegúrate de tener este componente
+import DeleteWorkOrderModal from '../components/modals/DeleteWorkOrderModal' // Asegúrate de tener este componente
+import AddWorkOrderModal from '../components/modals/AddWorkOrderModal' // Asegúrate de tener este componente
+import WorkOrderDetailsModal from '../components/modals/WorkOrderDetailsModal'
 import { fetchWorkOrders, deleteWorkOrder, updateWorkOrderStatus } from '../services/workOrderService' // Asegúrate de tener este servicio
-import { WorkOrderStatusDropdown } from './WorkOrderStatusDropdown' // Asegúrate de tener este componente
+import { WorkOrderStatusDropdown } from '../components/WorkOrderStatusDropdown' // Asegúrate de tener este componente
 
 export default function WorkOrderTable () {
   const [workOrders, setWorkOrders] = useState<WorkOrder[]>([])
@@ -55,6 +55,8 @@ export default function WorkOrderTable () {
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsFetching(true) // Antes de hacer la solicitud
+
       try {
         // Pasa currentPage y itemsPerPage como argumentos a fetchWorkOrders
         const responseData = await fetchWorkOrders(currentPage, itemsPerPage)
@@ -141,14 +143,8 @@ export default function WorkOrderTable () {
         <div className="mb-4">
           <AddWorkOrderModal />
         </div>
-        {isFetching && (
-          <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
-            <Spinner />
-          </div>
-        )}
 
 <Table aria-label="Work Orders table">
-  {/* Define las columnas que necesitas para las órdenes de trabajo */}
   <TableHeader>
   <TableColumn align="center" className="w-1/6">NÚMERO DE ORDEN</TableColumn>
 
@@ -221,6 +217,12 @@ export default function WorkOrderTable () {
           />
         )}
 
+            {isFetching && (
+                      <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
+                        <Spinner color="success" size='lg'/>
+                      </div>
+            )}
+
         {(editingWorkOrderId != null) && (
           <EditWorkOrderModal
             isOpen={editingWorkOrderId !== null}
@@ -247,8 +249,8 @@ export default function WorkOrderTable () {
             onOpenChange={() => { setViewingWorkOrderId(null) }}
             workOrder={workOrders.find(order => order._id === viewingWorkOrderId)}
           />
-
           )}
+
       </div>
     </div>
   )

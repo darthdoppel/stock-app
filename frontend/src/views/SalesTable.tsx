@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Pagination } from '@nextui-org/react'
-import { type Accessory } from './types'
+import { type Accessory } from '../components/types'
 
 import { fetchSales } from '../services/saleService'
 import { fetchAccessories } from '../services/accessoryService'
@@ -61,7 +61,7 @@ export default function SalesTable () {
       {loading
         ? (
         <div className="flex justify-center">
-          <Spinner />
+          <Spinner color="success" size='lg'/>
         </div>
           )
         : (

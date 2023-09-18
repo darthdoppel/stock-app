@@ -12,7 +12,7 @@ import {
   SelectItem
 } from '@nextui-org/react'
 import { toast } from 'sonner'
-import { type Accessory } from './types'
+import { type Accessory } from '../types'
 
 interface EditAccessoryModalProps {
   isOpen: boolean

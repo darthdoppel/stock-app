@@ -1,6 +1,6 @@
 import React from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react'
-import { type WorkOrder } from './types'
+import { type WorkOrder } from '../types'
 
 interface WorkOrderDetailsModalProps {
   isOpen: boolean

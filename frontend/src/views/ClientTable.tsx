@@ -1,13 +1,13 @@
 import { useState, useEffect, type SetStateAction } from 'react'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Input, Spinner, Tooltip, Pagination } from '@nextui-org/react'
-import { type Client, type WorkOrder } from './types'
-import { EditIcon } from './EditIcon'
-import { DeleteIcon } from './DeleteIcon'
-import { EyeIcon } from './EyeIcon'
-import EditClientModal from './EditClientModal'
-import DeleteClientModal from './DeleteClientModal'
-import AddClientModal from './AddClientModal'
-import ClientWorkOrdersModal from './ClientWorkOrdersModal'
+import { type Client, type WorkOrder } from '../components/types'
+import { EditIcon } from '../components/EditIcon'
+import { DeleteIcon } from '../components/DeleteIcon'
+import { EyeIcon } from '../components/EyeIcon'
+import EditClientModal from '../components/modals/EditClientModal'
+import DeleteClientModal from '../components/modals/DeleteClientModal'
+import AddClientModal from '../components/modals/AddClientModal'
+import ClientWorkOrdersModal from '../components/modals/ClientWorkOrdersModal'
 import { fetchClients, deleteClient } from '../services/clientService'
 import { fetchClientWorkOrders } from '../services/workOrderService'
 
@@ -116,13 +116,11 @@ export default function ClientTable () {
             onClear={() => { setFilterValue('') }}
             className="w-1/2"
           />
-
-          <AddClientModal />
         </div>
 
         {isFetching && (
           <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
-            <Spinner />
+            <Spinner color="success" size='lg'/>
           </div>
         )}
 

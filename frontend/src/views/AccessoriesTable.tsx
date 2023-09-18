@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react'
 import { Button, Image, Input, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Tooltip, Pagination } from '@nextui-org/react'
-import { type Accessory } from './types'
-import { EditIcon } from './EditIcon'
-import { DeleteIcon } from './DeleteIcon'
-import EditAccessoryModal from './EditAccessoryModal'
-import DeleteAccessoryModal from './DeleteAccessoryModal'
-import QuantitySelectionModal from './QuantitySelectionModal'
+import { type Accessory } from '../components/types'
+import { EditIcon } from '../components/EditIcon'
+import { DeleteIcon } from '../components/DeleteIcon'
+import EditAccessoryModal from '../components/modals/EditAccessoryModal'
+import DeleteAccessoryModal from '../components/modals/DeleteAccessoryModal'
+import QuantitySelectionModal from '../components/modals/QuantitySelectionModal'
 import { fetchAccessories, deleteAccessory } from '../services/accessoryService'
 import { createSale } from '../services/saleService'
-import AddAccessoryModal from './AddAccessoryModal'
-import ShoppingCart from './ShoppingCart'
+import AddAccessoryModal from '../components/modals/AddAccessoryModal'
+import ShoppingCart from '../components/ShoppingCart'
 import { toast } from 'sonner'
 
 export default function TableComponent () {
@@ -349,7 +349,7 @@ export default function TableComponent () {
 
         {isFetching && (
         <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
-          <Spinner />
+          <Spinner color="success" size='lg'/>
         </div>
         )}
 

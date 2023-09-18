@@ -1,6 +1,6 @@
 import React from 'react'
 import { Chip, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react'
-import { type WorkOrder } from './types' // Asegúrate de importar el tipo correcto
+import { type WorkOrder } from '../types' // Asegúrate de importar el tipo correcto
 
 interface ClientWorkOrdersModalProps {
   isOpen: boolean

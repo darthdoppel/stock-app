@@ -11,9 +11,9 @@ import {
 } from '@nextui-org/react'
 
 import { toast } from 'sonner'
-import { type Client } from './types'
+import { type Client } from '../types'
 
-import PlusCircle from './PlusCircle'
+import PlusCircle from '../PlusCircle'
 
 interface AddClientModalProps {
   isOpen: boolean

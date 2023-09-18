@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Divider, Input } from '@nextui-org/react'
 import { toast } from 'sonner'
-import { type Client } from './types'
+import { type Client } from '../types'
 
 interface EditClientModalProps {
   isOpen: boolean
