@@ -1,5 +1,5 @@
 staticSites:
-  - name: https://stock-app-api-rmyf.onrender.com
+  - name: stock-app-client
     buildCommand: npm run build
     publishDir: build
     routes:
