@@ -15,5 +15,3 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         </NextUIProvider>
   </React.StrictMode>
 )
-
-// <main className="dark text-foreground bg-background">

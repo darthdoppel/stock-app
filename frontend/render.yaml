@@ -1,0 +1,7 @@
+staticSites:
+  - name: https://stock-app-api-rmyf.onrender.com
+    buildCommand: npm run build
+    publishDir: build
+    routes:
+      - src: /.*
+        dest: index.html
