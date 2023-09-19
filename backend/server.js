@@ -9,6 +9,7 @@ const workOrderRoutes = require('./src/routes/workOrderRoutes')
 const dashboardRoutes = require('./src/routes/dashboardRoutes')
 const errorHandler = require('./src/middleware/errorHandler')
 const connectToDatabase = require('./src/utils/dbConnection')
+const path = require('path')
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -22,6 +23,11 @@ app.use(clientRoutes)
 app.use(equipmentRoutes)
 app.use(workOrderRoutes)
 app.use('/dashboard', dashboardRoutes)
+
+// Agrega una regla para manejar las rutas de la aplicación React
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'index.html'))
+})
 app.use(errorHandler)
 
 app.listen(PORT, () => {
