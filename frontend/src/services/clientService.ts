@@ -1,6 +1,6 @@
 import { type Client } from '../components/types'
 
-const BASE_URL = 'http://localhost:3000'
+const BASE_URL = 'https://stock-app-api-rmyf.onrender.com'
 
 export async function fetchClients (
   page: number,

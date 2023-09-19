@@ -1,6 +1,6 @@
 import { type Accessory } from '../components/types'
 
-const BASE_URL = 'http://localhost:3000' // Ajusta la URL base según tu API
+const BASE_URL = 'https://stock-app-api-rmyf.onrender.com'
 
 export interface Sale {
   _id: string
