@@ -6,7 +6,7 @@ import WorkOrderTable from './views/WorkOrderTable'
 import NavBar from './components/Navbar'
 import Dashboard from './views/Dashboard'
 import { Toaster } from 'sonner'
-import { HashRouter as Router, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom'
 import Footer from './components/Footer'
 
 function Content () {
