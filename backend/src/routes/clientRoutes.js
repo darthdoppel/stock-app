@@ -38,6 +38,23 @@ router.get('/clients', async (req, res) => {
   }
 })
 
+// Ruta para obtener el total de clientes en función del rango de fechas seleccionado
+router.get('/clients/total', async (req, res) => {
+  try {
+    const { from, to } = req.query // Obtén los valores del rango de fechas desde la consulta
+
+    // Realiza la consulta a la base de datos para contar los clientes en el rango de fechas
+    const totalClients = await Client.countDocuments({
+      dateAdded: { $gte: new Date(from), $lte: new Date(to) }
+    })
+
+    res.send({ total: totalClients })
+  } catch (error) {
+    console.error('Error al obtener el total de clientes:', error)
+    res.status(500).send('Error al obtener el total de clientes')
+  }
+})
+
 router.get('/client/:id', async (req, res) => {
   try {
     const id = req.params.id

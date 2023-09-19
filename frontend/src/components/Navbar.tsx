@@ -16,6 +16,11 @@ export default function NavBar () {
         <p className="font-bold text-inherit">STOCK APP</p>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
+        <NavbarItem isActive={currentPath === '/dashboard'}>
+          <Link color={getLinkColor('/dashboard')} href="/dashboard" aria-current={currentPath === '/dashboard' ? 'page' : undefined}>
+            Dashboard
+          </Link>
+        </NavbarItem>
         <NavbarItem isActive={currentPath === '/'}>
           <Link color={getLinkColor('/')} href="/" aria-current={currentPath === '/' ? 'page' : undefined}>
             Accesorios

@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@heroicons/react": "^1.0.6",
     "@nextui-org/react": "2.1.12",
+    "@tremor/react": "^3.7.8",
     "framer-motion": "10.16.4",
     "next-themes": "^0.2.1",
     "react": "18.2.0",

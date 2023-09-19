@@ -100,3 +100,16 @@ export async function updateAccessoryStock (
     throw error
   }
 }
+
+export async function fetchTotalSalesAndAccessories (from: string, to: string): Promise<{ totalSales: number }> {
+  try {
+    const response = await fetch(`${BASE_URL}/sales/totals?from=${from}&to=${to}`)
+    if (!response.ok) {
+      throw new Error('Error al obtener el total de ventas.')
+    }
+    return await response.json()
+  } catch (error) {
+    console.error('Error al obtener el total de ventas:', error)
+    throw error
+  }
+}

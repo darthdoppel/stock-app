@@ -4,6 +4,7 @@ import SalesTable from './views/SalesTable'
 import ClientTable from './views/ClientTable'
 import WorkOrderTable from './views/WorkOrderTable'
 import NavBar from './components/Navbar'
+import Dashboard from './views/Dashboard'
 import { Toaster } from 'sonner'
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom'
 
@@ -21,6 +22,7 @@ function Content () {
         )}
       </div>
       <Routes>
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/sales" element={<SalesTable />} />
         <Route path="/" element={<TableComponent />} />
         <Route path="/clients" element={<ClientTable />} />

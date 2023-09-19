@@ -95,3 +95,20 @@ export async function fetchClientByDNI (dni: string): Promise<Client> {
     throw error
   }
 }
+
+export async function fetchTotalClientsCount (from?: Date, to?: Date): Promise<number> {
+  const startDate = (from != null) ? from.toISOString() : new Date().toISOString() // Si 'from' no está definido, usamos la fecha actual
+  const endDate = (to != null) ? to.toISOString() : new Date().toISOString() // Si 'to' no está definido, usamos la fecha actual
+
+  try {
+    const response = await fetch(`${BASE_URL}/clients/total?from=${startDate}&to=${endDate}`)
+    if (!response.ok) {
+      throw new Error('Error al obtener el total de clientes.')
+    }
+    const { total } = await response.json()
+    return total
+  } catch (error) {
+    console.error('Error al obtener el total de clientes:', error)
+    throw error
+  }
+}

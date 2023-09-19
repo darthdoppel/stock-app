@@ -55,6 +55,25 @@ export interface PaginatedResponse<T> {
   total: number
 }
 
-// Ejemplo de uso:
-// ApiResponse<Client[]> para una respuesta paginada de clientes
-// ApiResponse<Accessory[]> para una respuesta paginada de accesorios
+export interface DailyData {
+  _id: {
+    year: number
+    month: number
+    day: number
+  }
+  totalSales?: number
+  totalProfit?: number
+  totalClients?: number
+}
+
+export interface WorkOrderStatus {
+  _id: string
+  count: number
+}
+
+export interface DashboardResponse {
+  dailyProfits: DailyData[]
+  dailySales: DailyData[]
+  dailyClients: DailyData[]
+  workOrdersByStatus: WorkOrderStatus[]
+}

@@ -1,11 +1,9 @@
-GET http://localhost:3000/clients
+POST http://localhost:3000/client
 Content-Type: application/json
 
 {
-  "firstName": "Carlos",
-  "lastName": "Rodríguez",
-  "dni": "56789012",
-  "phoneNumber": "+5491123456789",
-  "email": "carlos.rodriguez@gmail.com",
-  "address": "Montañas 101, Bariloche, Argentina"
+  "firstName": "John",
+  "lastName": "Doe",
+  "phoneNumber": "123-456-7890",
+  "dni": "12345678"
 }

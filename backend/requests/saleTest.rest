@@ -3,10 +3,16 @@ POST http://localhost:3000/sale
 Content-Type: application/json
 
 {
-  "date": "2023-09-01T10:00:00Z",
-  "accessoriesSold": ["6501fd1c92aac2dc2d82b4cf"],
+  "date": "2023-09-04T10:00:00Z",
+  "accessoriesSold": [
+    {
+      "_id": "6501ff1b6af89925a46460bf",
+      "quantity": 1
+    }
+  ],
   "total": 80.00
 }
+
 
 ###
 

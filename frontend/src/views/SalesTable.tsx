@@ -80,7 +80,7 @@ export default function SalesTable () {
                   <TableCell>
                     {sale.accessoriesSold.map((item, index) => {
                       const accessory = accessories.find((acc) => acc._id === item._id)
-                      if (!accessory) {
+                      if (accessory == null) {
                         console.warn('Accesorio no encontrado:', item._id)
                         return 'Accesorio no encontrado'
                       }

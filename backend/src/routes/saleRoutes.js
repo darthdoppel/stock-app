@@ -78,6 +78,33 @@ router.get('/sale/:id', async (req, res) => {
   }
 })
 
+// Ruta para obtener el total de ventas en función del rango de fechas seleccionado
+router.get('/sales/totals', async (req, res) => {
+  try {
+    const { from, to } = req.query // Obtén los valores del rango de fechas desde la consulta
+
+    // Realiza la consulta a la base de datos para sumar las ventas en el rango de fechas
+    const totalSalesValue = await Sale.aggregate([
+      {
+        $match: {
+          date: { $gte: new Date(from), $lte: new Date(to) }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalSales: { $sum: '$total' }
+        }
+      }
+    ])
+
+    res.send({ totalSales: totalSalesValue[0]?.totalSales || 0 })
+  } catch (error) {
+    console.error('Error al obtener el total de ventas:', error)
+    res.status(500).send('Error al obtener el total de ventas')
+  }
+})
+
 router.delete('/sale/:id', async (req, res) => {
   try {
     const id = req.params.id

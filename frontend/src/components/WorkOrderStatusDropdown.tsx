@@ -18,7 +18,8 @@ const statusLabels: Record<StatusKey, string> = {
   cancelled: 'Cancelado'
 }
 
-export const WorkOrderStatusDropdown: React.FC<WorkOrderStatusDropdownProps> = ({ status, onStatusChange }) => {
+// eslint-disable-next-line react/prop-types
+export const WorkOrderStatusDropdown: React.FC<WorkOrderStatusDropdownProps> = ({ onStatusChange }) => {
   const handleStatusSelect = (newStatus: StatusKey) => {
     onStatusChange(newStatus)
     toast.success(`Estado cambiado a ${statusLabels[newStatus]}`)
