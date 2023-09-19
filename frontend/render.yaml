@@ -1,7 +1,7 @@
 staticSites:
   - name: stock-app-client
     buildCommand: npm run build
-    publishDir: build
+    publishDir: dist
     routes:
       - src: /.*
         dest: index.html
