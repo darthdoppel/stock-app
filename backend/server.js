@@ -28,6 +28,7 @@ app.use('/dashboard', dashboardRoutes)
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'index.html'))
 })
+
 app.use(errorHandler)
 
 app.listen(PORT, () => {
