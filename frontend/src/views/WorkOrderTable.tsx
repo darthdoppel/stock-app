@@ -120,6 +120,8 @@ export default function WorkOrderTable () {
     setViewingWorkOrderId(id)
   }
 
+  const foundOrder = workOrders.find(order => order._id === viewingWorkOrderId)
+
   return (
     <div className="w-1/2 mx-auto pb-8">
       <div className="relative">
@@ -213,13 +215,13 @@ export default function WorkOrderTable () {
           }}
         />
 
-          {(viewingWorkOrderId != null) && (
-            <WorkOrderDetailsModal
-            isOpen={viewingWorkOrderId !== null}
-            onOpenChange={() => { setViewingWorkOrderId(null) }}
-            workOrder={workOrders.find(order => order._id === viewingWorkOrderId)}
-          />
-          )}
+            {Boolean(viewingWorkOrderId) && (
+              <WorkOrderDetailsModal
+              isOpen={viewingWorkOrderId !== null}
+              onOpenChange={() => { setViewingWorkOrderId(null) }}
+              workOrder={foundOrder ?? null}
+              />
+            )}
 
       </div>
     </div>

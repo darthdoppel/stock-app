@@ -9,8 +9,8 @@ import AddEquipmentModal from './AddEquipmentModal'
 interface WorkOrderDetailsModalProps {
   isOpen: boolean
   onOpenChange: () => void
-  workOrder: WorkOrder
-  onEquipmentEdit: (editedEquipment: Equipment) => void
+  workOrder: WorkOrder | null
+  onEquipmentEdit?: (editedEquipment: Equipment) => void
 }
 
 const WorkOrderDetailsModal: React.FC<WorkOrderDetailsModalProps> = ({ isOpen, onOpenChange, workOrder }) => {
@@ -30,9 +30,13 @@ const WorkOrderDetailsModal: React.FC<WorkOrderDetailsModalProps> = ({ isOpen, o
   }
 
   const handleAddEquipment = (newEquipment: Equipment) => {
-    workOrder.equipments.push(newEquipment) // Añade el nuevo equipo a la orden
+    if (workOrder != null) {
+      workOrder.equipments.push(newEquipment) // Añade el nuevo equipo a la orden
+    }
     setIsAddEquipmentModalOpen(false) // Cierra el modal de agregar equipo
   }
+
+  const equipments = workOrder?.equipments
 
   return (
     <>
@@ -40,8 +44,11 @@ const WorkOrderDetailsModal: React.FC<WorkOrderDetailsModalProps> = ({ isOpen, o
         <ModalContent>
           <ModalHeader>Detalles de la Orden de Trabajo</ModalHeader>
           <ModalBody>
-            {workOrder.equipments.map((equipment) => (
-              <Card key={equipment._id} className="mb-4">
+          {
+            ((equipments != null) && equipments.length > 0)
+              ? (
+                  equipments.map((equipment) => (
+                  <Card key={equipment._id} className="mb-4">
                 <CardBody>
                   <p className="mb-2"><strong>Tipo:</strong> {equipment.type}</p>
                   <p className="mb-2"><strong>Marca:</strong> {equipment.brand}</p>
@@ -94,7 +101,10 @@ const WorkOrderDetailsModal: React.FC<WorkOrderDetailsModalProps> = ({ isOpen, o
                   {/* Aquí puedes añadir otro botón para abrir el modal de edición de costos */}
                 </CardBody>
               </Card>
-            ))}
+                  ))
+                )
+              : <p className="text-center">No hay equipos registrados para esta orden.</p>
+          }
           </ModalBody>
           <ModalFooter>
               <Button color="secondary" onClick={() => { setIsAddEquipmentModalOpen(true) }}>
@@ -114,17 +124,19 @@ const WorkOrderDetailsModal: React.FC<WorkOrderDetailsModalProps> = ({ isOpen, o
               onEquipmentAdded={handleAddEquipment}
           />
 
-      {currentEquipment !== null && currentEquipment !== undefined && (
+      {(currentEquipment != null) && (
         <>
           <EditEquipmentModal
             isOpen={isEditEquipmentModalOpen}
             onOpenChange={() => { setIsEditEquipmentModalOpen(!isEditEquipmentModalOpen) }}
             equipment={currentEquipment}
             onEditSuccess={(editedEquipment) => {
-              const updatedEquipments = workOrder.equipments.map((equipment) =>
-                equipment._id === editedEquipment._id ? editedEquipment : equipment
-              )
-              workOrder.equipments = updatedEquipments
+              if (workOrder != null) {
+                const updatedEquipments = workOrder.equipments.map((equipment) =>
+                  equipment._id === editedEquipment._id ? editedEquipment : equipment
+                )
+                workOrder.equipments = updatedEquipments
+              }
               setCurrentEquipment(null) // Opcional: para resetear el equipo seleccionado.
             }}
           />
@@ -134,10 +146,12 @@ const WorkOrderDetailsModal: React.FC<WorkOrderDetailsModalProps> = ({ isOpen, o
             onOpenChange={() => { setIsEditCostModalOpen(!isEditCostModalOpen) }}
             equipment={currentEquipment}
             onEditSuccess={(editedEquipment) => {
-              const updatedEquipments = workOrder.equipments.map((equipment) =>
-                equipment._id === editedEquipment._id ? editedEquipment : equipment
-              )
-              workOrder.equipments = updatedEquipments
+              if (workOrder != null) {
+                const updatedEquipments = workOrder.equipments.map((equipment) =>
+                  equipment._id === editedEquipment._id ? editedEquipment : equipment
+                )
+                workOrder.equipments = updatedEquipments
+              }
               setCurrentEquipment(null)
             }}
           />

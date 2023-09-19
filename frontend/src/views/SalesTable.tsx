@@ -79,9 +79,9 @@ export default function SalesTable () {
 
                   <TableCell>
                     {sale.accessoriesSold.map((item, index) => {
-                      const accessory = accessories.find((acc) => acc._id === item._id)
+                      const accessory = accessories.find((acc) => acc._id === item.accessory._id)
                       if (accessory == null) {
-                        console.warn('Accesorio no encontrado:', item._id)
+                        console.warn('Accesorio no encontrado:', item.accessory._id)
                         return 'Accesorio no encontrado'
                       }
                       return index === 0
