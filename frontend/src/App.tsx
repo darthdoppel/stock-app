@@ -7,6 +7,7 @@ import NavBar from './components/Navbar'
 import Dashboard from './views/Dashboard'
 import { Toaster } from 'sonner'
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom'
+import Footer from './components/Footer'
 
 function Content () {
   const location = useLocation()
@@ -28,6 +29,7 @@ function Content () {
         <Route path="/clients" element={<ClientTable />} />
         <Route path="/work-orders" element={<WorkOrderTable />} />
       </Routes>
+      <Footer /> {/* Agregamos el componente de Footer aquí */}
     </div>
   )
 }
