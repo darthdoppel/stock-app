@@ -7,11 +7,22 @@ interface QuantitySelectionModalProps {
   onQuantityConfirm: (quantity: number) => void
 }
 
-const QuantitySelectionModal: React.FC<QuantitySelectionModalProps> = ({ isOpen, onOpenChange, onQuantityConfirm }) => {
+const QuantitySelectionModal: React.FC<QuantitySelectionModalProps> = ({
+  isOpen,
+  onOpenChange,
+  onQuantityConfirm
+}) => {
   const [selectedQuantity, setSelectedQuantity] = useState<number>(1)
 
   const handleQuantityChange = (value: string) => {
-    setSelectedQuantity(Math.min(15, Math.max(1, Number(value))))
+    // Validamos que el valor sea un número entero válido
+    const parsedValue = parseInt(value, 10)
+
+    if (!isNaN(parsedValue)) {
+      // Limitamos el valor a un rango entre 1 y 15
+      const clampedValue = Math.min(15, Math.max(1, parsedValue))
+      setSelectedQuantity(clampedValue)
+    }
   }
 
   const handleConfirmClick = () => {
@@ -28,8 +39,10 @@ const QuantitySelectionModal: React.FC<QuantitySelectionModalProps> = ({ isOpen,
             type="number"
             min="1"
             max="15"
-            value={selectedQuantity}
-            onChange={(e) => { handleQuantityChange(e.target.value) }}
+            value={selectedQuantity.toString()}
+            onChange={(e) => {
+              handleQuantityChange(e.target.value)
+            }}
             className="w-20"
           />
         </ModalBody>

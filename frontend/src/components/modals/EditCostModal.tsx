@@ -27,8 +27,8 @@ const EditCostModal: React.FC<EditCostModalProps> = ({ isOpen, onOpenChange, equ
 
   const getUpdatedValues = () => {
     const updates: Partial<Equipment> = {}
-    let repairCost = equipment.repairCost
-    let materialCost = equipment.materialCost
+    let repairCost: number | undefined = equipment?.repairCost
+    let materialCost: number | undefined = equipment?.materialCost
 
     if (changes.repairCost?.modified) {
       repairCost = parseFloat(changes.repairCost.value ?? '0')
@@ -40,8 +40,11 @@ const EditCostModal: React.FC<EditCostModalProps> = ({ isOpen, onOpenChange, equ
       updates.materialCost = materialCost
     }
 
-    // Calculamos la ganancia estimada
-    updates.estimatedProfit = repairCost - materialCost
+    // Calculamos la ganancia estimada si ambos valores están definidos
+    if (typeof repairCost === 'number' && typeof materialCost === 'number') {
+      updates.estimatedProfit = repairCost - materialCost
+    }
+
     return updates
   }
 
@@ -85,8 +88,30 @@ const EditCostModal: React.FC<EditCostModalProps> = ({ isOpen, onOpenChange, equ
         <ModalBody>
           {(error.length > 0) && <p className="text-red-600">{error}</p>}
           <form onSubmit={(e) => { e.preventDefault(); void handleSubmit() }}>
-            <Input name="repairCost" label="Costo de Reparación" placeholder="Costo de reparación" type="number" onChange={handleChange} value={changes.repairCost?.modified ? changes.repairCost.value : equipment.repairCost?.toString()} />
-            <Input name="materialCost" label="Costo de Materiales" placeholder="Costo de materiales" type="number" onChange={handleChange} value={changes.materialCost?.modified ? changes.materialCost.value : equipment.materialCost?.toString()} />
+          <Input
+            name="repairCost"
+            label="Costo de Reparación"
+            placeholder="Costo de reparación"
+            type="number"
+            onChange={handleChange}
+            value={
+              changes.repairCost?.modified
+                ? changes.repairCost.value
+                : equipment.repairCost?.toString() ?? ''
+            }
+          />
+            <Input
+              name="materialCost"
+              label="Costo de Materiales"
+              placeholder="Costo de materiales"
+              type="number"
+              onChange={handleChange}
+              value={
+                changes.materialCost?.modified
+                  ? changes.materialCost.value
+                  : equipment.materialCost?.toString() ?? ''
+              }
+            />
             <p className="mt-4"><strong>Ganancia Estimada:</strong> ${calculateEstimatedProfit().toFixed(2)}</p>
 
             <ModalFooter>
