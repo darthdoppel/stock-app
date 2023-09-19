@@ -90,7 +90,13 @@ export default function SalesTable () {
                     })}
                   </TableCell>
 
-                  <TableCell>{sale.total}</TableCell>
+                  <TableCell>
+                    {sale.total.toLocaleString('es-AR', {
+                      style: 'currency',
+                      currency: 'ARS',
+                      minimumFractionDigits: sale.total % 1 === 0 ? 0 : 2
+                    })}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -78,7 +78,6 @@ export default function AddWorkOrderModal () {
       const data = await response.json()
       toast.success('Orden de trabajo agregada')
       console.log('Orden de trabajo agregada:', data)
-
       onOpenChange()
     } catch (err) {
       if (err instanceof Error) {
@@ -134,12 +133,12 @@ export default function AddWorkOrderModal () {
       setSearchedClient(clientData)
     } catch (err: any) { // <-- Cambio aquí
       if (err instanceof Error) {
-        toast.error((err.message.length > 0) || 'Error al buscar el cliente.')
+        toast.error(err.message || 'Error al buscar el cliente.')
       } else {
         toast.error('Error al buscar el cliente.')
       }
       if (err.message === 'No se encontró el cliente con ese DNI.') {
-        toast.error('No se encontró el cliente con ese DNI.') // Mostramos el mensaje de error
+        toast.message('No se encontró el cliente con ese DNI. Puede agregar uno nuevo.')
         setClientModalOpen(true) // Abre el modal de agregar cliente
       }
       setSearchedClient(null)

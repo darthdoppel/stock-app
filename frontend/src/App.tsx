@@ -14,7 +14,7 @@ function Content () {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen">
       <NavBar />
-      <Toaster richColors />
+      <Toaster richColors position="top-right" />
       <div className="p-4 mt-20">
         {location.pathname === '/' && (
           <div className="flex justify-end w-full"> {/* Alinea a la derecha */}

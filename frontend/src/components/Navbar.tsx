@@ -1,4 +1,4 @@
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from '@nextui-org/react'
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link } from '@nextui-org/react'
 import { useLocation } from 'react-router-dom'
 import { ThemeSwitcher } from './ThemeSwitcher'
 
@@ -13,7 +13,7 @@ export default function NavBar () {
   return (
     <Navbar className="fixed top-0 left-0 w-full z-50 mb-4">
       <NavbarBrand>
-        <p className="font-bold text-inherit">STOCK APP</p>
+      <Link href="/dashboard" isBlock size="lg" underline="none" color="foreground">STOCK APP</Link>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem isActive={currentPath === '/dashboard'}>
@@ -44,14 +44,7 @@ export default function NavBar () {
       </NavbarContent>
       <NavbarContent justify="end" className="flex items-center"> {/* Agrega la clase flex y items-center */}
         <ThemeSwitcher /> {/* Agrega el ThemeSwitcher aquí */}
-        <NavbarItem className="hidden lg:flex">
-          <Link color="foreground" href="#">Login</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Registro
-          </Button>
-        </NavbarItem>
+
       </NavbarContent>
     </Navbar>
   )
