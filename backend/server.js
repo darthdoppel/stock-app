@@ -15,7 +15,7 @@ const app = express()
 const PORT = process.env.PORT || 3000
 
 app.use(express.json())
-app.use(cors())
+app.use(cors({ origin: 'https://stock-app-api-rmyf.onrender.com' }))
 
 app.use(accessoryRoutes)
 app.use(saleRoutes)
@@ -26,7 +26,9 @@ app.use('/dashboard', dashboardRoutes)
 
 // Agrega una regla para manejar las rutas de la aplicación React
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'index.html'))
+  const filePath = path.join(__dirname, 'frontend', 'index.html')
+  console.log(`Intentando enviar el archivo: ${filePath}`)
+  res.sendFile(filePath)
 })
 
 app.use(errorHandler)
