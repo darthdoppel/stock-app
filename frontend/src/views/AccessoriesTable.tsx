@@ -228,10 +228,12 @@ export default function TableComponent () {
 
         <div style={{ margin: '20px auto', textAlign: 'center' }}>
         <Table
+            color="primary"
             selectionMode="multiple"
             aria-label="Accessories table"
-            onSelectionChange={handleSelectionChange as any} // Convierte la función a any
-          >
+            onSelectionChange={handleSelectionChange as any}
+            selectionBehavior='replace'
+        >
 
 <TableHeader>
     <TableColumn

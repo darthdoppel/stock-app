@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.hide-select-all-checkbox > th:first-child {
+    display: none;
+  }

@@ -1,12 +1,10 @@
-import { type Accessory } from '../components/types'
-
 const BASE_URL = 'https://stock-app-api-rmyf.onrender.com'
 
-export interface Sale {
+interface Sale {
   _id: string
   date: Date
   accessoriesSold: Array<{
-    accessory: Accessory
+    _id: string // Aquí se almacena el ID del accesorio vendido
     quantity: number
   }>
   total: number
