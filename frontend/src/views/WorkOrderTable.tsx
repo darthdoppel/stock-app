@@ -135,16 +135,14 @@ export default function WorkOrderTable () {
   return (
     <div className="w-1/2 mx-auto pb-8">
       <div className="relative">
-        {/* Botón para activar el modal de agregar orden de trabajo */}
-        <div className="mb-4">
-          <AddWorkOrderModal />
-        </div>
 
-                  <Select
+      <div className="flex justify-between items-center mb-4">
+          <Select
             label="Filtrar por estado"
             value={filterStatus}
             onChange={(e) => { setFilterStatus(e.target.value) }}
-            className="mb-4"
+            className="w-1/4" // Establece el ancho del Select al 25% del contenedor padre
+
           >
             {orderStatuses.map((status) => (
               <SelectItem key={status.value} value={status.value}>
@@ -152,6 +150,9 @@ export default function WorkOrderTable () {
               </SelectItem>
             ))}
           </Select>
+
+          <AddWorkOrderModal />
+        </div>
 
 <Table aria-label="Work Orders table">
   <TableHeader>

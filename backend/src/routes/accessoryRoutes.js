@@ -15,15 +15,20 @@ router.post('/accessory', async (req, res) => {
 
 router.get('/accessories', async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1 // Obtén el número de página de la consulta o usa 1 como valor predeterminado
-    const perPage = parseInt(req.query.perPage) || 10 // Obtén la cantidad por página o usa 10 como valor predeterminado
+    const page = parseInt(req.query.page) || 1
+    const perPage = parseInt(req.query.perPage) || 10
+    const search = req.query.search || ''
 
-    const skip = (page - 1) * perPage // Calcula el número de documentos para omitir
-    const accessories = await Accessory.find()
-      .skip(skip) // Omite los documentos anteriores en función de la página
-      .limit(perPage) // Limita la cantidad de documentos por página
+    const skip = (page - 1) * perPage
 
-    const totalAccessories = await Accessory.countDocuments() // Cuenta el número total de documentos en la colección
+    // Si se proporciona un término de búsqueda, filtra por el nombre; de lo contrario, devuelve todos los accesorios.
+    const filter = search ? { name: new RegExp(search, 'i') } : {}
+
+    const accessories = await Accessory.find(filter)
+      .skip(skip)
+      .limit(perPage)
+
+    const totalAccessories = await Accessory.countDocuments(filter)
 
     res.send({
       data: accessories,

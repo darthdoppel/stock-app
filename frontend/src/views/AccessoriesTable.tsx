@@ -34,9 +34,9 @@ export default function TableComponent () {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseData = await fetchAccessories(currentPage, itemsPerPage)
+        const responseData = await fetchAccessories(currentPage, itemsPerPage, filterValue)
         setAccessories(responseData.data)
-        setTotalAccessories(responseData.total) // Actualiza el estado con el total de accesorios
+        setTotalAccessories(responseData.total)
         setTotalPages(Math.ceil(responseData.total / itemsPerPage))
       } catch (error) {
         console.error('Error al obtener los accesorios:', error)
@@ -46,7 +46,7 @@ export default function TableComponent () {
     }
 
     void fetchData()
-  }, [currentPage, itemsPerPage])
+  }, [currentPage, itemsPerPage, filterValue])
 
   const handleEditClick = (id: string) => {
     setEditingAccessoryId(id)

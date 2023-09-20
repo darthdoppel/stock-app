@@ -6,14 +6,15 @@ const BASE_URL = 'https://stock-app-api-rmyf.onrender.com'
 
 export async function fetchAccessories (
   page: number,
-  perPage: number
+  perPage: number,
+  search: string
 ): Promise<{ data: Accessory[], total: number }> {
   try {
     const response = await fetch(
-      `${BASE_URL}/accessories?page=${page}&perPage=${perPage}`
+      `${BASE_URL}/accessories?page=${page}&perPage=${perPage}&search=${search}`
     )
     const responseData = await response.json()
-    return responseData // Devuelve la estructura { data, total }
+    return responseData
   } catch (error) {
     console.error('Error al obtener los accesorios:', error)
     throw error
