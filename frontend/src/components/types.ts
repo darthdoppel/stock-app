@@ -23,6 +23,17 @@ export interface Client {
   dni: string
 }
 
+export interface AccessoryData {
+  name: string
+  brand: string
+  compatiblePhoneModel: string
+  price: number
+  quantityInStock: number
+  category: string
+  imageUrl?: string // Asumo que este campo es opcional, ajusta según sea necesario
+  // ... cualquier otro campo que pueda ser parte de accessoryData
+}
+
 export interface Equipment {
   _id: string
   type: 'Notebook' | 'Celular' | 'Tablet' | 'Otros'

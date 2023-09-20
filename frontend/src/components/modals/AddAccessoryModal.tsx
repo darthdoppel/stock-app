@@ -14,15 +14,22 @@ import {
 } from '@nextui-org/react'
 
 import { toast } from 'sonner'
+import { addAccessory } from '../../services/accessoryService'
 
 import PlusCircle from '../../icons/PlusCircle'
 
 export default function AddAccessoryModal () {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const [accessory, setAccessory] = useState({
-    // Inicializa quantityInStock con 0
-    quantityInStock: 0
+    name: '',
+    brand: '',
+    compatiblePhoneModel: '',
+    price: 0,
+    quantityInStock: 0,
+    category: 'fundas',
+    imageUrl: ''
   })
+
   const [error, setError] = useState('')
   const [category, setCategory] = useState('fundas')
 
@@ -42,22 +49,9 @@ export default function AddAccessoryModal () {
       category
     }
     try {
-      const response = await fetch('http://localhost:3000/accessory', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(accessoryData)
-      })
-
-      if (!response.ok) {
-        throw new Error('Hubo un error al enviar los datos')
-      }
-
-      const data = await response.json()
+      const data = await addAccessory(accessoryData)
       toast.success('Accesorio agregado')
       console.log('Accesorio agregado:', data)
-
       onOpenChange()
     } catch (err) {
       if (err instanceof Error) {
@@ -94,6 +88,17 @@ export default function AddAccessoryModal () {
                   <Input className="mb-4" isRequired name="compatiblePhoneModel" label="Modelo de teléfono compatible" placeholder="Introduce el modelo de teléfono compatible" onChange={handleChange} />
 
                   <Input className="mb-4" isRequired type="number" name="price" label="Precio" placeholder="Introduce el precio" required onChange={handleChange} />
+
+                  <Input
+                    className="mb-4"
+                    isRequired
+                    type="number"
+                    name="quantityInStock"
+                    label="Cantidad en Stock"
+                    placeholder="Introduce la cantidad en stock"
+                    required
+                    onChange={handleChange}
+                  />
 
                 <Select isRequired
                     value={category}

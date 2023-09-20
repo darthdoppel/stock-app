@@ -1,8 +1,34 @@
 // accessoryService.ts
 
-import { type Accessory } from '../components/types'
+import { type Accessory, type AccessoryData } from '../components/types'
 
 const BASE_URL = 'https://stock-app-api-rmyf.onrender.com'
+
+export async function addAccessory (accessoryData: AccessoryData): Promise<any> {
+  try {
+    const response = await fetch(`${BASE_URL}/accessory`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(accessoryData)
+    })
+
+    if (!response.ok) {
+      const errorResponse = await response.json()
+      const errorMessage = (errorResponse?.message !== undefined && errorResponse?.message !== null)
+        ? errorResponse.message
+        : 'Hubo un error al enviar los datos'
+
+      throw new Error(errorMessage)
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error('Error al agregar el accesorio:', error)
+    throw error
+  }
+}
 
 export async function fetchAccessories (
   page: number,
