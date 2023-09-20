@@ -132,6 +132,11 @@ export default function WorkOrderTable () {
 
   const foundOrder = workOrders.find(order => order._id === viewingWorkOrderId)
 
+  const handleFilterChange = (value: string) => {
+    setFilterStatus(value)
+    setCurrentPage(1) // Restablece la página actual a 1 cada vez que cambias el filtro
+  }
+
   return (
     <div className="w-1/2 mx-auto pb-8">
       <div className="relative">
@@ -140,7 +145,7 @@ export default function WorkOrderTable () {
           <Select
             label="Filtrar por estado"
             value={filterStatus}
-            onChange={(e) => { setFilterStatus(e.target.value) }}
+            onChange={(e) => { handleFilterChange(e.target.value) }}
             className="w-1/4" // Establece el ancho del Select al 25% del contenedor padre
 
           >
