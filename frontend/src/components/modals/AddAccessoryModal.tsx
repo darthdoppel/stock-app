@@ -100,26 +100,33 @@ export default function AddAccessoryModal () {
                     onChange={handleChange}
                   />
 
-                <Select isRequired
-                    value={category}
-                    onChange={(e) => { setCategory(e.target.value) }}
-                    label="Categoría"
-                    placeholder="Seleccione una categoría"
-                    className="max-w-xs mb-4"
-                    >
-                    <SelectItem key="fundas" value="fundas">
-                        Fundas
-                    </SelectItem>
-                    <SelectItem key="protectores de pantalla" value="protectores de pantalla">
-                        Protectores de Pantalla
-                    </SelectItem>
-                    <SelectItem key="auriculares" value="auriculares">
-                        Auriculares
-                    </SelectItem>
-                    <SelectItem key="cargadores" value="cargadores">
-                        Cargadores
-                    </SelectItem>
-                </Select>
+                  <Select isRequired
+                      value={category}
+                      onChange={(e) => { setCategory(e.target.value) }}
+                      label="Categoría"
+                      placeholder="Seleccione una categoría"
+                      className="max-w-xs mb-4"
+                      >
+                      <SelectItem key="fundas" value="fundas">
+                          Fundas
+                      </SelectItem>
+                      <SelectItem key="protectores de pantalla" value="protectores de pantalla">
+                          Protectores de Pantalla
+                      </SelectItem>
+                      <SelectItem key="auriculares" value="auriculares">
+                          Auriculares
+                      </SelectItem>
+                      <SelectItem key="cargadores" value="cargadores">
+                          Cargadores
+                      </SelectItem>
+                      <SelectItem key="cables" value="cables">
+                          Cables
+                      </SelectItem>
+                      <SelectItem key="varios" value="varios">
+                          Varios
+                      </SelectItem>
+                  </Select>
+
                   <Input type="url" name="imageUrl" label="URL de la imagen" placeholder="Introduce la URL de la imagen del accesorio" onChange={handleChange} />
                   {/* Puedes agregar más campos según tus necesidades */}
                   <ModalFooter>
