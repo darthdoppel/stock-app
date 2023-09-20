@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input } from '@nextui-org/react'
 import { toast } from 'sonner'
 import { type Equipment } from '../types'
+import { updateEquipment } from '../../services/equipmentService'
 
 interface EditCostModalProps {
   isOpen: boolean
@@ -56,22 +57,14 @@ const EditCostModal: React.FC<EditCostModalProps> = ({ isOpen, onOpenChange, equ
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/equipment/${equipment._id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(getUpdatedValues())
-      })
-
-      if (!response.ok) {
-        throw new Error('Hubo un error al enviar los datos')
+      if (equipment._id != null) {
+        const updatedEquipment = await updateEquipment(equipment._id, getUpdatedValues())
+        toast.success('Costos actualizados exitosamente')
+        onEditSuccess(updatedEquipment)
+        onOpenChange()
+      } else {
+        setError('El ID del equipo no está definido.')
       }
-
-      const updatedEquipment = await response.json()
-      toast.success('Costos actualizados exitosamente')
-      onEditSuccess(updatedEquipment)
-      onOpenChange()
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message)
