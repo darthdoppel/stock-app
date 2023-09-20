@@ -26,7 +26,7 @@ export default function SalesTable () {
   useEffect(() => {
     const fetchAccessoriesData = async () => {
       try {
-        const data = await fetchAccessories(1, 100)
+        const data = await fetchAccessories(1, 100, '')
         setAccessories(data.data)
       } catch (error) {
         console.error('Error al obtener los accesorios:', error)
