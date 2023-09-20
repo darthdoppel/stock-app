@@ -1,3 +1,5 @@
+import { fetchClientByDNI } from './clientService'
+
 const BASE_URL = 'https://stock-app-api-rmyf.onrender.com'
 
 export async function fetchWorkOrders (
@@ -106,4 +108,46 @@ export async function fetchClientWorkOrders (clientId: string): Promise<any[]> {
     console.error('Error al obtener las órdenes de trabajo del cliente:', error)
     throw error
   }
+}
+
+export async function addEquipment (equipmentData: { type: string, brand: string, model: string, problemDescription: string }): Promise<string> {
+  const response = await fetch(`${BASE_URL}/equipment`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(equipmentData)
+  })
+
+  if (!response.ok) {
+    const errorResponse = await response.json()
+    console.error('Detalles del error:', errorResponse)
+    throw new Error('Hubo un error al guardar los equipos')
+  }
+
+  const data = await response.json()
+  return data._id // Retornamos el ID del equipo guardado
+}
+
+export async function addWorkOrder (workOrderData: { dni: string, equipments: string[] }): Promise<any> {
+  const requestData = {
+    ...workOrderData,
+    client: await fetchClientByDNI(workOrderData.dni) // Usar el ID del cliente en la solicitud de la orden de trabajo
+  }
+
+  const response = await fetch(`${BASE_URL}/work-order`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(requestData)
+  })
+
+  if (!response.ok) {
+    const errorResponse = await response.json()
+    console.error('Detalles del error:', errorResponse)
+    throw new Error('Hubo un error al enviar los datos')
+  }
+
+  return await response.json()
 }

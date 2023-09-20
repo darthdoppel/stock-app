@@ -4,6 +4,8 @@ import { toast } from 'sonner'
 import PlusCircle from '../../icons/PlusCircle'
 import AddClientModal from './AddClientModal'
 import { type Equipment, type Client } from '../types' // Asegúrate de importar el tipo Equipment desde tu archivo types.ts
+import { fetchClientByDNI } from '../../services/clientService'
+import { addEquipment, addWorkOrder } from '../../services/workOrderService'
 
 type WorkOrderForm = Pick<Client, 'dni'>
 
@@ -25,57 +27,15 @@ export default function AddWorkOrderModal () {
 
   const handleSubmit = async (): Promise<void> => {
     try {
-      // Obtener el ID del cliente basado en el DNI
-      const clientResponse = await fetch(`http://localhost:3000/client/dni/${workOrder.dni}`)
-
-      if (!clientResponse.ok) {
-        throw new Error('No se encontró el cliente con ese DNI.')
-      }
-
-      const clientData = await clientResponse.json()
-
-      // Crear un array de identificadores de equipos
       const equipmentIds = []
 
-      // Iterar sobre los equipos y guardar sus datos en la base de datos
       for (const equipment of equipments) {
-        const response = await fetch('http://localhost:3000/equipment', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(equipment)
-        })
-
-        if (!response.ok) {
-          throw new Error('Hubo un error al guardar los equipos')
-        }
-
-        const data = await response.json()
-        equipmentIds.push(data._id) // Agregar el ID del equipo guardado
+        const equipmentId = await addEquipment(equipment)
+        equipmentIds.push(equipmentId)
       }
 
-      // Creamos un objeto que incluya la información de la orden de trabajo y los equipos
-      const requestData = {
-        ...workOrder,
-        client: clientData._id, // Usar el ID del cliente en la solicitud de la orden de trabajo
-        equipments: equipmentIds
-      }
+      const data = await addWorkOrder({ ...workOrder, equipments: equipmentIds })
 
-      // Enviar la solicitud para crear la orden de trabajo
-      const response = await fetch('http://localhost:3000/work-order', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestData)
-      })
-
-      if (!response.ok) {
-        throw new Error('Hubo un error al enviar los datos')
-      }
-
-      const data = await response.json()
       toast.success('Orden de trabajo agregada')
       console.log('Orden de trabajo agregada:', data)
       onOpenChange()
@@ -125,19 +85,15 @@ export default function AddWorkOrderModal () {
 
   const handleSearchClient = async () => {
     try {
-      const clientResponse = await fetch(`http://localhost:3000/client/dni/${workOrder.dni}`)
-      if (!clientResponse.ok) {
-        throw new Error('No se encontró el cliente con ese DNI.')
-      }
-      const clientData = await clientResponse.json()
+      const clientData = await fetchClientByDNI(workOrder.dni)
       setSearchedClient(clientData)
-    } catch (err: any) { // <-- Cambio aquí
-      if (err instanceof Error) {
-        toast.error(err.message || 'Error al buscar el cliente.')
+    } catch (err: any) {
+      if (err instanceof Error && err.message !== '') {
+        toast.error(err.message !== '' ? err.message : 'Error al buscar el cliente.')
       } else {
         toast.error('Error al buscar el cliente.')
       }
-      if (err.message === 'No se encontró el cliente con ese DNI.') {
+      if (err instanceof Error && err.message.includes(`Error al obtener el cliente con DNI ${workOrder.dni}`)) {
         toast.message('No se encontró el cliente con ese DNI. Puede agregar uno nuevo.')
         setClientModalOpen(true) // Abre el modal de agregar cliente
       }
