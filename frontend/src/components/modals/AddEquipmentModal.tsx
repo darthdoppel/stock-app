@@ -13,7 +13,7 @@ interface AddEquipmentModalProps {
 }
 
 const AddEquipmentModal: React.FC<AddEquipmentModalProps> = ({ isOpen, onOpenChange, onEquipmentAdded }) => {
-  const [equipment, setEquipment] = useState<Equipment>({
+  const [equipment, setEquipment] = useState<Partial<Equipment>>({
     type: 'Notebook',
     brand: '',
     model: '',
