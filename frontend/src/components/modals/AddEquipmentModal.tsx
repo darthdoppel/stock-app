@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Select, SelectItem } from '@nextui-org/react'
 import { toast } from 'sonner'
 import { type Equipment } from '../types'
+import { addEquipment } from '../../services/equipmentService' // Asegúrate de importar la función desde tu archivo equipmentService.ts
 
 interface AddEquipmentModalProps {
   isOpen: boolean
@@ -29,20 +30,11 @@ const AddEquipmentModal: React.FC<AddEquipmentModalProps> = ({ isOpen, onOpenCha
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch('http://localhost:3000/equipment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(equipment)
-      })
-
-      if (!response.ok) {
-        throw new Error('Hubo un error al añadir el equipo')
-      }
-
-      const newEquipment = await response.json()
+      // Crear el nuevo equipo
+      const newEquipment = await addEquipment(equipment)
       toast.success('Equipo añadido con éxito')
+
+      // Llamar a la función onEquipmentAdded para actualizar la lista de equipos en la orden de trabajo
       onEquipmentAdded(newEquipment)
       onOpenChange()
     } catch (err) {

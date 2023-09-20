@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Select, SelectItem } from '@nextui-org/react'
 import { toast } from 'sonner'
 import { type Equipment } from '../types'
+import { updateEquipment, getEquipment } from '../../services/equipmentService'
 
 interface EditEquipmentModalProps {
   isOpen: boolean
@@ -11,7 +12,7 @@ interface EditEquipmentModalProps {
 }
 
 const EditEquipmentModal: React.FC<EditEquipmentModalProps> = ({ isOpen, onOpenChange, equipment, onEditSuccess }) => {
-  const [selectedType, setSelectedType] = useState('')
+  const [selectedType, setSelectedType] = useState<'Notebook' | 'Celular' | 'Tablet' | 'Otros' | undefined>(undefined)
   const [changes, setChanges] = useState<Partial<Equipment>>({})
   const [error, setError] = useState('')
 
@@ -20,13 +21,10 @@ const EditEquipmentModal: React.FC<EditEquipmentModalProps> = ({ isOpen, onOpenC
   useEffect(() => {
     const fetchEquipment = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/equipment/${equipment._id}`)
-        const data = await response.json()
-
-        console.log('Data obtenida:', data) // Añade este log
-
+        const data = await getEquipment(equipment._id)
+        console.log('Data obtenida:', data)
         setChanges(data)
-        setSelectedType(data.type) // Actualizar el tipo seleccionado aquí
+        setSelectedType(data.type)
       } catch (error) {
         console.error('Error al cargar el equipo:', error)
       }
@@ -46,20 +44,18 @@ const EditEquipmentModal: React.FC<EditEquipmentModalProps> = ({ isOpen, onOpenC
   }
 
   const handleSubmit = async () => {
+    if (equipment._id === null) {
+      setError('ID del equipo no definido.')
+      return
+    }
+
+    if (typeof selectedType === 'undefined') {
+      setError('Tipo de equipo no seleccionado.')
+      return
+    }
+
     try {
-      const response = await fetch(`http://localhost:3000/equipment/${equipment._id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ ...changes, type: selectedType }) // Incluir el tipo seleccionado
-      })
-
-      if (!response.ok) {
-        throw new Error('Hubo un error al enviar los datos')
-      }
-
-      const updatedEquipment = await response.json()
+      const updatedEquipment = await updateEquipment(equipment._id, { ...changes, type: selectedType })
       toast.success('Equipo actualizado exitosamente')
       onEditSuccess(updatedEquipment)
       onOpenChange()
@@ -81,17 +77,17 @@ const EditEquipmentModal: React.FC<EditEquipmentModalProps> = ({ isOpen, onOpenC
           <form onSubmit={(e) => { e.preventDefault(); void handleSubmit() }}>
 
           <Select
-              name="type"
-              label="Tipo"
-              placeholder="Seleccione el tipo de equipo"
-              selectedKeys={new Set([selectedType])}
-              onSelectionChange={(newSelection) => {
-                const selectedValue = [...newSelection][0]
-                if (typeof selectedValue === 'string') {
-                  setSelectedType(selectedValue)
-                }
-              }}
->
+          name="type"
+          label="Tipo"
+          placeholder="Seleccione el tipo de equipo"
+          selectedKeys={selectedType !== undefined ? new Set([selectedType]) : undefined}
+          onSelectionChange={(newSelection) => {
+            const selectedValue = String([...newSelection][0])
+            if (equipmentTypeOptions.includes(selectedValue)) {
+              setSelectedType(selectedValue as 'Notebook' | 'Celular' | 'Tablet' | 'Otros')
+            }
+          }}
+        >
 
               {equipmentTypeOptions.map((type) => (
                 <SelectItem key={type} value={type}>

@@ -24,7 +24,7 @@ export interface Client {
 }
 
 export interface Equipment {
-  _id?: string
+  _id: string
   type: 'Notebook' | 'Celular' | 'Tablet' | 'Otros'
   brand: string
   model: string
