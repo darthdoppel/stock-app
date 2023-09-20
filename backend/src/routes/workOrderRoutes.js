@@ -19,6 +19,7 @@ router.get('/work-orders', async (req, res) => {
     const page = parseInt(req.query.page) || 1
     const perPage = parseInt(req.query.perPage) || 10
     const filter = req.query.filter || ''
+    const status = req.query.status || '' // Añadir esta línea
 
     const skip = (page - 1) * perPage
 
@@ -28,6 +29,11 @@ router.get('/work-orders', async (req, res) => {
     // Si hay un valor de filtro, actualiza las condiciones para incluir un regex basado en el nombre del cliente.
     if (filter) {
       conditions['client.firstName'] = new RegExp(filter, 'i')
+    }
+
+    // Si hay un valor de estado, añade la condición de estado
+    if (status) {
+      conditions.status = status // Añadir esta línea
     }
 
     const workOrders = await WorkOrder.find(conditions)
