@@ -26,9 +26,8 @@ router.get('/work-orders', async (req, res) => {
     // Crea un objeto vacío para las condiciones de búsqueda.
     const conditions = {}
 
-    // Si hay un valor de filtro, actualiza las condiciones para incluir un regex basado en el nombre del cliente.
     if (filter) {
-      conditions['client.firstName'] = new RegExp(filter, 'i')
+      conditions.status = filter
     }
 
     // Si hay un valor de estado, añade la condición de estado
