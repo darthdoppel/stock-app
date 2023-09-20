@@ -93,11 +93,14 @@ export default function AddWorkOrderModal () {
       } else {
         toast.error('Error al buscar el cliente.')
       }
-      if (err instanceof Error && err.message.includes(`Error al obtener el cliente con DNI ${workOrder.dni}`)) {
+
+      // Verifica si el mensaje de error indica que el cliente no se encontró y muestra un mensaje para agregar uno nuevo.
+      if (err instanceof Error && err.message.includes('Cliente no encontrado')) {
         toast.message('No se encontró el cliente con ese DNI. Puede agregar uno nuevo.')
         setClientModalOpen(true) // Abre el modal de agregar cliente
+      } else {
+        setSearchedClient(null)
       }
-      setSearchedClient(null)
     }
   }
 

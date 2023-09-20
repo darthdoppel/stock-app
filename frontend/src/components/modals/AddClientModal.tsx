@@ -14,6 +14,7 @@ import { toast } from 'sonner'
 import { type Client } from '../types'
 
 import PlusCircle from '../../icons/PlusCircle'
+import { addClient } from '../../services/clientService'
 
 interface AddClientModalProps {
   isOpen: boolean
@@ -23,7 +24,15 @@ interface AddClientModalProps {
 }
 
 export default function AddClientModal ({ isOpen, onOpenChange, showButton = true, onClientAdded }: AddClientModalProps) {
-  const [client, setClient] = useState({})
+  const [client, setClient] = useState({
+    firstName: '',
+    lastName: '',
+    dni: '',
+    email: '',
+    phoneNumber: '',
+    address: ''
+  })
+
   const [error, setError] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,19 +42,7 @@ export default function AddClientModal ({ isOpen, onOpenChange, showButton = tru
 
   const handleSubmit = async (): Promise<void> => {
     try {
-      const response = await fetch('http://localhost:3000/client', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(client)
-      })
-
-      if (!response.ok) {
-        throw new Error('Hubo un error al enviar los datos')
-      }
-
-      const data = await response.json()
+      const data = await addClient(client as Omit<Client, '_id'>)
       toast.success('Cliente agregado')
       console.log('Cliente agregado:', data)
 

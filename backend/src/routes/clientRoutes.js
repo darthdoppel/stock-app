@@ -75,13 +75,12 @@ router.get('/client/dni/:dni', async (req, res) => {
     const dni = req.params.dni
     const client = await Client.findOne({ dni })
     if (!client) {
-      res.status(404).send('Cliente no encontrado')
-      return
+      return res.status(404).json({ message: 'Cliente no encontrado' })
     }
-    res.send(client)
+    res.json(client)
   } catch (error) {
     console.error('Error al obtener el cliente por DNI:', error)
-    res.status(500).send('Error al obtener el cliente por DNI')
+    res.status(500).json({ message: 'Error al obtener el cliente por DNI' })
   }
 })
 
