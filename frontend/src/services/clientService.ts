@@ -81,12 +81,16 @@ export async function updateClient (id: string, updatedData: Partial<Client>): P
   }
 }
 
-export async function fetchClientByDNI (dni: string): Promise<Client> {
+export async function fetchClientByDNI (dni: string): Promise<Client | null> {
   try {
     const response = await fetch(`${BASE_URL}/client/dni/${dni}`)
     if (!response.ok) {
       const errorResponse = await response.json()
       console.error('Detalles del error:', errorResponse)
+      if (response.status === 404) {
+        // Cliente no encontrado, devolver null
+        return null
+      }
       throw new Error(`Error al obtener el cliente con DNI ${dni}`)
     }
     return await response.json()
