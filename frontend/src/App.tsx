@@ -16,7 +16,7 @@ function Content () {
   const location = useLocation()
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen">
+    <div className="relative">
       <NavBar />
       <Toaster richColors position="top-right" />
       <div className="p-4 mt-20">

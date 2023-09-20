@@ -16,17 +16,27 @@ router.post('/work-order', async (req, res) => {
 
 router.get('/work-orders', async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1 // Obtén el número de página de la consulta o usa 1 como valor predeterminado
-    const perPage = parseInt(req.query.perPage) || 10 // Obtén la cantidad por página o usa 10 como valor predeterminado
+    const page = parseInt(req.query.page) || 1
+    const perPage = parseInt(req.query.perPage) || 10
+    const filter = req.query.filter || ''
 
-    const skip = (page - 1) * perPage // Calcula el número de documentos para omitir
-    const workOrders = await WorkOrder.find()
+    const skip = (page - 1) * perPage
+
+    // Crea un objeto vacío para las condiciones de búsqueda.
+    const conditions = {}
+
+    // Si hay un valor de filtro, actualiza las condiciones para incluir un regex basado en el nombre del cliente.
+    if (filter) {
+      conditions['client.firstName'] = new RegExp(filter, 'i')
+    }
+
+    const workOrders = await WorkOrder.find(conditions)
       .populate('client')
       .populate('equipments')
-      .skip(skip) // Omite los documentos anteriores en función de la página
-      .limit(perPage) // Limita la cantidad de documentos por página
+      .skip(skip)
+      .limit(perPage)
 
-    const totalWorkOrders = await WorkOrder.countDocuments() // Cuenta el número total de documentos en la colección
+    const totalWorkOrders = await WorkOrder.countDocuments(conditions)
 
     res.send({
       data: workOrders,

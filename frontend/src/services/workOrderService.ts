@@ -4,12 +4,18 @@ const BASE_URL = 'https://stock-app-api-rmyf.onrender.com'
 
 export async function fetchWorkOrders (
   page: number,
-  perPage: number
+  perPage: number,
+  filterValue: string = '' // Nuevo argumento
 ): Promise<{ data: any[], total: number }> {
   try {
-    const response = await fetch(
-      `${BASE_URL}/work-orders?page=${page}&perPage=${perPage}`
-    )
+    let endpoint = `${BASE_URL}/work-orders?page=${page}&perPage=${perPage}`
+
+    // Si hay un valor de filtro, añádelo al endpoint
+    if (filterValue.length > 0) {
+      endpoint += `&filter=${encodeURIComponent(filterValue)}`
+    }
+
+    const response = await fetch(endpoint)
     const responseData: { data: any[], total: number } = await response.json()
     return responseData
   } catch (error) {

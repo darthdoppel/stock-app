@@ -15,7 +15,7 @@ export default function NavBar () {
   }
 
   return (
-    <Navbar onMenuOpenChange={setIsMenuOpen}>
+    <Navbar isBordered shouldHideOnScroll onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}

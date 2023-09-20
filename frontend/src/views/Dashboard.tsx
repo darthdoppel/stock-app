@@ -7,13 +7,7 @@ import DonutChartWorkOrders from '../components/DonutChartWorkOrders'
 import {
   Card,
   Grid,
-  Title,
   Col,
-  Tab,
-  TabList,
-  TabGroup,
-  TabPanel,
-  TabPanels,
   Text,
   Metric,
   DateRangePicker
@@ -51,63 +45,50 @@ export default function Dashboard () {
   }, [dateRange])
 
   return (
-    <main className="p-12">
-      <Title>Dashboard</Title>
+    <main className="mx-auto max-w-screen-xl p-6">
 
-      <DateRangePicker
-        className="max-w-sm mx-auto"
-        enableSelect={false}
-        onValueChange={(value) => {
-          if ((value.from != null) && (value.to != null)) {
-            setDateRange({ from: value.from, to: value.to })
-          }
-        }}
-        placeholder="Seleccionar rango de fechas" // Traducción de "Select range"
-        selectPlaceholder="Seleccionar" // Traducción de "Select"
-      />
+      <div className="flex mb-10">
+        <DateRangePicker
+          className="max-w-sm"
+          enableSelect={false}
+          onValueChange={(value) => {
+            if ((value.from != null) && (value.to != null)) {
+              setDateRange({ from: value.from, to: value.to })
+            }
+          }}
+          placeholder="Seleccionar rango de fechas"
+          selectPlaceholder="Seleccionar"
+        />
+      </div>
 
-      <TabGroup className="mt-6">
-        <TabList>
-          <Tab>Dashboard</Tab>
-        </TabList>
-        <TabPanels>
+      <Grid numItemsMd={3} className="gap-6">
+        <Col>
+          <Card className="max-w-xs mx-auto" decoration="top" decorationColor="indigo">
+            <Text>Total ventas</Text>
+            <Metric>
+              {totalSales !== null ? `ARS ${new Intl.NumberFormat('es-AR').format(totalSales)}` : 'N/A'}
+            </Metric>
+          </Card>
+        </Col>
+        <Col>
+          <Card className="max-w-xs mx-auto" decoration="top" decorationColor="indigo">
+            <Text>Total clientes nuevos</Text>
+            <Metric>{totalClientsCount ?? 'Loading...'}</Metric>
+          </Card>
+        </Col>
+        <Col numColSpan={1}>
+          <DonutChartWorkOrders fromDate={dateRange.from} toDate={dateRange.to} />
+        </Col>
+      </Grid>
 
-        <TabPanel>
-            <div className="relative">
-              {/* Componentes */}
-              <Grid numItemsMd={4} className="gap-6 mt-6">
-                <Col>
-                  <Card className="max-w-xs mx-auto" decoration="top" decorationColor="indigo">
-                    <Text>Total ventas</Text>
-                    <Metric>
-  {totalSales !== null ? `ARS ${new Intl.NumberFormat('es-AR').format(totalSales)}` : 'N/A'}
-</Metric>
+      <div className="w-full mt-6">
+        <AreaChartComponent
+          data={performanceData}
+          categories={['Sales', 'Clients', 'Profits']}
+          isLoading={loading} // Pasa el estado de carga
+        />
+      </div>
 
-                  </Card>
-                </Col>
-                <Col>
-                  <Card className="max-w-xs mx-auto" decoration="top" decorationColor="indigo">
-                    <Text>Total clientes nuevos</Text>
-                    <Metric>{totalClientsCount ?? 'Loading...'}</Metric>
-                  </Card>
-                </Col>
-                <Col numColSpan={2}>
-                  <DonutChartWorkOrders fromDate={dateRange.from} toDate={dateRange.to} />
-                </Col>
-              </Grid>
-            <div className="w-full mt-6">
-              <AreaChartComponent
-                data={performanceData}
-                categories={['Sales', 'Clients', 'Profits']}
-                isLoading={loading} // Pasa el estado de carga
-              />
-            </div>
-
-          </div>
-        </TabPanel>
-
-        </TabPanels>
-      </TabGroup>
     </main>
   )
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Chip, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Tooltip, Pagination } from '@nextui-org/react'
+import { Chip, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Tooltip, Pagination, Select, SelectItem } from '@nextui-org/react'
 import { type WorkOrder } from '../components/types' // Asegúrate de definir este tipo
 import { DeleteIcon } from '../icons/DeleteIcon'
 import { EyeIcon } from '../icons/EyeIcon'
@@ -20,6 +20,8 @@ export default function WorkOrderTable () {
   const [totalWorkOrders, setTotalWorkOrders] = useState(0)
   const [viewingWorkOrderId, setViewingWorkOrderId] = useState<string | null>(null)
 
+  const [filterStatus, setFilterStatus] = useState('')
+
   const translateStatus = (status: string) => {
     switch (status) {
       case 'pending':
@@ -34,6 +36,14 @@ export default function WorkOrderTable () {
         return status
     }
   }
+
+  const orderStatuses = [
+    { label: 'Todos', value: '' },
+    { label: 'Pendiente', value: 'pending' },
+    { label: 'En progreso', value: 'in-progress' },
+    { label: 'Completado', value: 'completed' },
+    { label: 'Cancelado', value: 'cancelled' }
+  ]
 
   const renderStatusChip = (status: string) => {
     switch (status) {
@@ -56,7 +66,7 @@ export default function WorkOrderTable () {
 
       try {
         // Pasa currentPage y itemsPerPage como argumentos a fetchWorkOrders
-        const responseData = await fetchWorkOrders(currentPage, itemsPerPage)
+        const responseData = await fetchWorkOrders(currentPage, itemsPerPage, filterStatus)
 
         if (Array.isArray(responseData.data)) {
           // Accede a la propiedad 'data' de la respuesta
@@ -75,7 +85,7 @@ export default function WorkOrderTable () {
     }
 
     void fetchData()
-  }, [currentPage, itemsPerPage])
+  }, [currentPage, itemsPerPage, filterStatus])
 
   const handleDeleteIconClick = (id: string) => {
     setDeletingWorkOrderId(id)
@@ -129,6 +139,19 @@ export default function WorkOrderTable () {
         <div className="mb-4">
           <AddWorkOrderModal />
         </div>
+
+                  <Select
+            label="Filtrar por estado"
+            value={filterStatus}
+            onChange={(e) => { setFilterStatus(e.target.value) }}
+            className="mb-4"
+          >
+            {orderStatuses.map((status) => (
+              <SelectItem key={status.value} value={status.value}>
+                {status.label}
+              </SelectItem>
+            ))}
+          </Select>
 
 <Table aria-label="Work Orders table">
   <TableHeader>
