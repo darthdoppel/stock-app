@@ -42,7 +42,6 @@ export default function EditAccessoryModal ({ isOpen, onOpenChange, accessoryId,
         const data = await response.json()
         setAccessory(data)
         setCategory(data.category)
-        console.log('ESTOOOO', data.category)
       } catch (error) {
         console.error('Error al cargar el accesorio:', error)
       }
@@ -101,7 +100,6 @@ export default function EditAccessoryModal ({ isOpen, onOpenChange, accessoryId,
 
       const data = await response.json()
       toast.success('Accesorio actualizado')
-      console.log('Accesorio actualizado:', data)
 
       onEditSuccess(data) // Llamar al callback después de una edición exitosa
       onOpenChange()

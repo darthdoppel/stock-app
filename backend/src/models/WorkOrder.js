@@ -21,10 +21,6 @@ workOrderSchema.pre('save', async function (next) {
         newOrderNumber = parseInt(lastOrder.orderNumber, 10) + 1
       }
       this.orderNumber = newOrderNumber.toString() // Asignar el número de orden único
-
-      // Dentro del middleware `pre('save')`:
-      console.log('Last Order Number:', lastOrder && lastOrder.orderNumber)
-      console.log('New Order Number:', newOrderNumber)
     }
     next()
   } catch (error) {

@@ -32,6 +32,5 @@ app.get('*', (req, res) => {
 app.use(errorHandler)
 
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`)
   connectToDatabase()
 })

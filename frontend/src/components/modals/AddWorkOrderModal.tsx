@@ -36,10 +36,9 @@ export default function AddWorkOrderModal () {
         equipmentIds.push(equipmentId)
       }
 
-      const data = await addWorkOrder({ ...workOrder, equipments: equipmentIds })
+      await addWorkOrder({ ...workOrder, equipments: equipmentIds })
 
       toast.success('Orden de trabajo agregada')
-      console.log('Orden de trabajo agregada:', data)
       onOpenChange()
       // Al agregar una orden de trabajo con éxito, restablecer la búsqueda
       setSearchedOnce(false)
@@ -96,8 +95,6 @@ export default function AddWorkOrderModal () {
     setSearchedClient(null)
     setSearchedOnce(false)
     setSearchedOnceAfterAddClient(false)
-    // Además, puedes agregar un console.log para verificar que se está llamando correctamente
-    console.log('Formulario restablecido')
   }, [])
 
   const handleSearchClient = async () => {

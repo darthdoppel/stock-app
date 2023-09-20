@@ -22,7 +22,6 @@ const EditEquipmentModal: React.FC<EditEquipmentModalProps> = ({ isOpen, onOpenC
     const fetchEquipment = async () => {
       try {
         const data = await getEquipment(equipment._id)
-        console.log('Data obtenida:', data)
         setChanges(data)
         setSelectedType(data.type)
       } catch (error) {

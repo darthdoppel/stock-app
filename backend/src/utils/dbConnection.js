@@ -8,7 +8,6 @@ module.exports = async () => {
       useUnifiedTopology: true,
       dbName: 'stock-app'
     })
-    console.log('Conectado a MongoDB')
   } catch (error) {
     console.error('Error conectando a MongoDB', error)
   }

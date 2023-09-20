@@ -44,7 +44,6 @@ export default function AddClientModal ({ isOpen, onOpenChange, showButton = tru
     try {
       const data = await addClient(client as Omit<Client, '_id'>)
       toast.success('Cliente agregado')
-      console.log('Cliente agregado:', data)
 
       onClientAdded?.(data) // Llama al callback si está definido
 

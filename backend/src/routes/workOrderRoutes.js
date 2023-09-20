@@ -71,7 +71,6 @@ router.get('/work-order/:id', async (req, res) => {
 })
 
 router.patch('/work-order/:id', async (req, res) => {
-  console.log('Datos recibidos para actualización:', req.body)
   try {
     const updatedWorkOrder = await WorkOrder.findByIdAndUpdate(req.params.id, req.body, { new: true })
       .populate('client')

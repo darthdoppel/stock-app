@@ -14,8 +14,7 @@ export async function fetchDailyProfits (fromDate: Date, toDate: Date) {
     }
 
     const data = await response.json()
-    const transformedData = transformDataForChart(data) // Transformas los datos aquí
-    console.log(transformedData) // Imprimes los datos transformados aquí
+    const transformedData = transformDataForChart(data)
 
     return transformedData
   } catch (error) {

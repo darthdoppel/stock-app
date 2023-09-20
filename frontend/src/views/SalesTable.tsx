@@ -41,7 +41,6 @@ export default function SalesTable () {
       try {
         const data = await fetchSales(currentPage, itemsPerPage)
         setSales(data.data)
-        console.log('estooo', data.data)
         setTotalPages(Math.ceil(data.total / itemsPerPage)) // Calcular el número total de páginas
       } catch (error) {
         console.error('Error al obtener las ventas:', error)

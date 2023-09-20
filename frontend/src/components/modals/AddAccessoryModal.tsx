@@ -49,9 +49,8 @@ export default function AddAccessoryModal () {
       category
     }
     try {
-      const data = await addAccessory(accessoryData)
+      await addAccessory(accessoryData)
       toast.success('Accesorio agregado')
-      console.log('Accesorio agregado:', data)
       onOpenChange()
     } catch (err) {
       if (err instanceof Error) {

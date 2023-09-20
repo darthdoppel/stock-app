@@ -29,8 +29,6 @@ export default function TableComponent () {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   const [totalAccessories, setTotalAccessories] = useState(0)
 
-  console.log(selectedItems, typeof selectedItems)
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -94,14 +92,11 @@ export default function TableComponent () {
   }
 
   const handleSelectionChange = (selectedItems: string[]) => {
-    console.log('estosss selectedItems', selectedItems)
     const newSelectedItems = new Set(selectedItems)
-    console.log('estosss newSelectedItems', newSelectedItems)
 
     setSelectedItems(newSelectedItems)
 
     const selectedArray = [...newSelectedItems]
-    console.log(selectedArray)
 
     selectedArray.forEach((id) => {
       // Si el ID seleccionado no está en el estado quantities, lo inicializamos con 1
@@ -160,8 +155,7 @@ export default function TableComponent () {
       }
 
       // Enviar la venta a la API
-      const newSale = await createSale(saleDetails)
-      console.log('Venta registrada:', newSale)
+      await createSale(saleDetails)
       toast.success('Actualizando stock...')
       toast.success('Venta registrada')
       toast.success(`Total: ${total.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}`)

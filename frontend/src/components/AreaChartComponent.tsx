@@ -16,8 +16,6 @@ interface AreaChartComponentProps {
 }
 
 const AreaChartComponent: React.FC<AreaChartComponentProps> = ({ data, categories, isLoading }) => {
-  console.log('Renderizando AreaChartComponent con isLoading:', isLoading)
-
   const [selectedCategory, setSelectedCategory] = useState(categories[0])
 
   const getColorForCategory = (category: string): Array<'gray' | 'slate' | 'zinc' | 'neutral' | 'stone' | 'red' | 'orange' | 'amber' | 'yellow' | 'lime' | 'green' | 'emerald' | 'teal' | 'cyan' | 'sky' | 'blue' | 'indigo' | 'violet' | 'purple' | 'fuchsia' | 'pink' | 'rose'> => {
