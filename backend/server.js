@@ -15,7 +15,12 @@ const app = express()
 const PORT = process.env.PORT || 3000
 
 app.use(express.json())
-app.use(cors({ origin: 'https://stock-app-client.onrender.com' }))
+const corsOptions = {
+  origin: ['https://stock-app-client.onrender.com', 'http://localhost:5173'],
+  optionsSuccessStatus: 200
+}
+
+app.use(cors(corsOptions))
 
 app.use(accessoryRoutes)
 app.use(saleRoutes)
