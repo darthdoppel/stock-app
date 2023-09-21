@@ -192,79 +192,75 @@ export default function TableComponent () {
   return (
     <div className="w-1/2 mx-auto pb-8">
        <div className="relative">
-       <div className="flex flex-col md:flex-row md:justify-between items-center mb-4">
+       <div className="flex justify-between items-center">
 
-       {/* Campo de búsqueda */}
-       <div className="order-1 md:order-none mb-2 md:mb-0 w-full md:w-1/2">
-          <Input
-            isClearable
-            type="text"
-            value={filterValue}
-            onChange={e => { setFilterValue(e.target.value) }}
-            placeholder="Funda, cargador, etc..."
-            label="Buscar"
-            variant="bordered"
-            onClear={() => { setFilterValue('') }}
-          />
-        </div>
+       <Input
+          isClearable
+          type="text"
+          value={filterValue}
+          onChange={e => { setFilterValue(e.target.value) }}
+          placeholder="Funda, cargador, etc..."
+          label="Buscar"
+          variant="bordered"
+          onClear={() => { setFilterValue('') } }
+          className="mb-4 w-1/2"
+        />
 
-      {/* Botones */}
-      <div className="order-2 flex items-center justify-between space-x-4 w-full md:w-auto">
-          <Button
-            color="primary"
-            size="md"
-            variant="solid"
-            onClick={() => { void handleSellClick() }}
-            isDisabled={selectedItems.size === 0}
-          >
-            Vender <ShoppingCart />
-          </Button>
-          <AddAccessoryModal />
-        </div>
+      <div className="p-3 flex items-center justify-end space-x-4">
+            <Button
+              color="primary"
+              size="md"
+              variant="solid"
+              onClick={() => { void handleSellClick() }}
+              isDisabled={selectedItems.size === 0}
+            >
+              Vender <ShoppingCart />
+            </Button>
+            <AddAccessoryModal />
+          </div>
           </div>
 
-          <div className="overflow-x-auto">
+        <div style={{ margin: '20px auto', textAlign: 'center' }}>
+        <Table
+            color="primary"
+            selectionMode="multiple"
+            aria-label="Accessories table"
+            onSelectionChange={handleSelectionChange as any}
+            selectionBehavior='replace'
+        >
 
-            <Table
-                color="primary"
-                selectionMode="multiple"
-                aria-label="Accessories table"
-                onSelectionChange={handleSelectionChange as any}
-                selectionBehavior='replace'
-            >
-
-        <TableHeader>
-              <TableColumn
-                  align="center"
-                  onClick={() => { handleSortClick('name') }}
-                  className="cursor-pointer hover:text-blue-500"
-              >
-                  NOMBRE <span className="inline-block hover:visible invisible"></span>
-              </TableColumn>
-            <TableColumn
-                align="center"
-                onClick={() => { handleSortClick('category') }}
-                className="cursor-pointer hover:text-blue-500"
-            >
-                CATEGORIA <span className="inline-block hover:visible invisible"></span>
-            </TableColumn>
-            <TableColumn
-                align="center"
-                onClick={() => { handleSortClick('quantityInStock') }}
-                className="cursor-pointer hover:text-blue-500 hidden md:table-cell"
-            >
-                STOCK <span className="inline-block hover:visible invisible"></span>
-            </TableColumn>
-            <TableColumn
-                align="center"
-                onClick={() => { handleSortClick('price') }}
-                className="cursor-pointer hover:text-blue-500"
-            >
-                PRECIO <span className="inline-block hover:visible invisible"></span>
-            </TableColumn>
-            <TableColumn align="center" className='hidden md:table-cell'>
-                ACCIONES
-            </TableColumn>
+<TableHeader>
+    <TableColumn
+        align="center"
+        onClick={() => { handleSortClick('name') }}
+        className="cursor-pointer hover:text-blue-500"
+    >
+        NOMBRE <span className="inline-block hover:visible invisible"></span>
+    </TableColumn>
+    <TableColumn
+        align="center"
+        onClick={() => { handleSortClick('category') }}
+        className="cursor-pointer hover:text-blue-500"
+    >
+        CATEGORIA <span className="inline-block hover:visible invisible"></span>
+    </TableColumn>
+    <TableColumn
+        align="center"
+        onClick={() => { handleSortClick('quantityInStock') }}
+        className="cursor-pointer hover:text-blue-500"
+    >
+        STOCK <span className="inline-block hover:visible invisible"></span>
+    </TableColumn>
+    <TableColumn
+        align="center"
+        onClick={() => { handleSortClick('price') }}
+        className="cursor-pointer hover:text-blue-500"
+    >
+        PRECIO <span className="inline-block hover:visible invisible"></span>
+    </TableColumn>
+    <TableColumn align="center">
+        ACCIONES
+    </TableColumn>
 </TableHeader>
 
           <TableBody>
