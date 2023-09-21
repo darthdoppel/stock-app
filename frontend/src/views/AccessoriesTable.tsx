@@ -241,54 +241,54 @@ export default function TableComponent () {
               >
                   NOMBRE <span className="inline-block hover:visible invisible"></span>
               </TableColumn>
-              <TableColumn
-                  align="center"
-                  onClick={() => { handleSortClick('category') }}
-                  className="cursor-pointer hover:text-blue-500"
-              >
-                  CATEGORIA <span className="inline-block hover:visible invisible"></span>
-              </TableColumn>
-              <TableColumn
-                  align="center"
-                  onClick={() => { handleSortClick('quantityInStock') }}
-                  className="cursor-pointer hover:text-blue-500 hidden md:table-cell"
-              >
-                  STOCK <span className="inline-block hover:visible invisible"></span>
-              </TableColumn>
-              <TableColumn
-                  align="center"
-                  onClick={() => { handleSortClick('price') }}
-                  className="cursor-pointer hover:text-blue-500"
-              >
-                  PRECIO <span className="inline-block hover:visible invisible"></span>
-              </TableColumn>
-              <TableColumn align="center" className='hidden md:table-cell'>
-                  ACCIONES
-              </TableColumn>
-        </TableHeader>
+            <TableColumn
+                align="center"
+                onClick={() => { handleSortClick('category') }}
+                className="cursor-pointer hover:text-blue-500"
+            >
+                CATEGORIA <span className="inline-block hover:visible invisible"></span>
+            </TableColumn>
+            <TableColumn
+                align="center"
+                onClick={() => { handleSortClick('quantityInStock') }}
+                className="cursor-pointer hover:text-blue-500 hidden md:table-cell"
+            >
+                STOCK <span className="inline-block hover:visible invisible"></span>
+            </TableColumn>
+            <TableColumn
+                align="center"
+                onClick={() => { handleSortClick('price') }}
+                className="cursor-pointer hover:text-blue-500"
+            >
+                PRECIO <span className="inline-block hover:visible invisible"></span>
+            </TableColumn>
+            <TableColumn align="center" className='hidden md:table-cell'>
+                ACCIONES
+            </TableColumn>
+</TableHeader>
 
           <TableBody>
 
-          {filteredAndSortedAccessories.map((accessory) => (
-              <TableRow key={accessory._id} className="md:table-row flex flex-col md:flex-row">
-                <TableCell className="flex items-center justify-start mb-4 md:mb-0">
-                  <Image
-                    width={50}
-                    height={50}
-                    alt={accessory.name}
-                    src={accessory.imageUrl}
-                    className="mr-2"
-                  />
-                  <div className="p-2">
-                    {accessory.name}
-                  </div>
-                </TableCell>
+            {filteredAndSortedAccessories.map((accessory) => (
+              <TableRow key={accessory._id}>
+                <TableCell className="flex items-center justify-start">
+                <Image
+                  width={50}
+                  height={50}
+                  alt={accessory.name}
+                  src={accessory.imageUrl}
+                  className="mr-2"
+                />
+                <div className="p-2">
+                  {accessory.name}
+                </div>
+              </TableCell>
 
-                <TableCell className='capitalize text-left mb-4 md:mb-0'>{accessory.category}</TableCell>
-      <TableCell className='text-left mb-4 md:mb-0'>{accessory.quantityInStock}</TableCell>
-      <TableCell className='text-left mb-4 md:mb-0'>{accessory.price.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</TableCell>
+              <TableCell className='capitalize text-left'>{accessory.category}</TableCell>
+              <TableCell className='text-left'>{accessory.quantityInStock}</TableCell>
+              <TableCell className='text-left'>{accessory.price.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</TableCell>
 
-      <TableCell className="mb-4 md:mb-0">
+                <TableCell>
 
                   <div className="relative flex items-center gap-2">
 
@@ -325,7 +325,7 @@ export default function TableComponent () {
                   </div>
                 </TableCell>
               </TableRow>
-          ))}
+            ))}
           </TableBody>
         </Table>
 
