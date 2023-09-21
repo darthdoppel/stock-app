@@ -230,7 +230,7 @@ export default function TableComponent () {
             aria-label="Accessories table"
             onSelectionChange={handleSelectionChange as any}
             selectionBehavior='replace'
-            className="min-w-[1000px] mb-4"
+            className="min-w-[900px] mb-4"
         >
 
 <TableHeader>
@@ -329,11 +329,12 @@ export default function TableComponent () {
           </TableBody>
         </Table>
 
-        </div>
-
         <span className="text-default-400 text-small">
             <br /> Total {totalAccessories} accesorios
         </span>
+
+        </div>
+
         {/* Paginación fuera del contenedor con desplazamiento horizontal */}
           <div className="mt-4 flex justify-center">
             {totalPages > 1 && (
