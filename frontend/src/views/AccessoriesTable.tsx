@@ -192,41 +192,45 @@ export default function TableComponent () {
   return (
     <div className="w-1/2 mx-auto pb-8">
        <div className="relative">
-       <div className="flex justify-between items-center">
+       <div className="flex flex-col md:flex-row md:justify-between items-center mb-4">
 
-       <Input
-          isClearable
-          type="text"
-          value={filterValue}
-          onChange={e => { setFilterValue(e.target.value) }}
-          placeholder="Funda, cargador, etc..."
-          label="Buscar"
-          variant="bordered"
-          onClear={() => { setFilterValue('') } }
-          className="mb-4 w-1/2"
-        />
+       {/* Campo de búsqueda */}
+       <div className="order-1 md:order-none mb-2 md:mb-0 w-full md:w-1/2">
+          <Input
+            isClearable
+            type="text"
+            value={filterValue}
+            onChange={e => { setFilterValue(e.target.value) }}
+            placeholder="Funda, cargador, etc..."
+            label="Buscar"
+            variant="bordered"
+            onClear={() => { setFilterValue('') }}
+          />
+        </div>
 
-      <div className="p-3 flex items-center justify-end space-x-4">
-            <Button
-              color="primary"
-              size="md"
-              variant="solid"
-              onClick={() => { void handleSellClick() }}
-              isDisabled={selectedItems.size === 0}
-            >
-              Vender <ShoppingCart />
-            </Button>
-            <AddAccessoryModal />
-          </div>
-          </div>
+     {/* Botones */}
+     <div className="order-2 flex items-center justify-between space-x-4 w-full md:w-auto">
+          <Button
+            color="primary"
+            size="md"
+            variant="solid"
+            onClick={() => { void handleSellClick() }}
+            isDisabled={selectedItems.size === 0}
+          >
+            Vender <ShoppingCart />
+          </Button>
+          <AddAccessoryModal />
+        </div>
+  </div>
 
-        <div style={{ margin: '20px auto', textAlign: 'center' }}>
+  <div className="overflow-x-auto w-full">
         <Table
             color="primary"
             selectionMode="multiple"
             aria-label="Accessories table"
             onSelectionChange={handleSelectionChange as any}
             selectionBehavior='replace'
+            className="min-w-[1000px] mb-4"
         >
 
 <TableHeader>
@@ -325,23 +329,23 @@ export default function TableComponent () {
           </TableBody>
         </Table>
 
-        <span className="text-default-400 text-small">
-    <br /> Total {totalAccessories} accesorios
-      </span>
-
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-
-        {totalPages > 1 && (
-            <Pagination
-              isCompact
-              showControls
-              total={totalPages} // Utilizamos el número total de páginas
-              page={currentPage}
-              onChange={handlePageChange}
-              className='mt-4'
-            />
-        )}
         </div>
+
+        <span className="text-default-400 text-small">
+            <br /> Total {totalAccessories} accesorios
+        </span>
+        {/* Paginación fuera del contenedor con desplazamiento horizontal */}
+          <div className="mt-4 flex justify-center">
+            {totalPages > 1 && (
+              <Pagination
+                isCompact
+                showControls
+                total={totalPages} // Utilizamos el número total de páginas
+                page={currentPage}
+                onChange={handlePageChange}
+              />
+            )}
+          </div>
 
         {isFetching && (
         <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
@@ -378,7 +382,5 @@ export default function TableComponent () {
         </div>
 
         </div>
-
-    </div>
   )
 }
