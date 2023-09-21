@@ -192,99 +192,103 @@ export default function TableComponent () {
   return (
     <div className="w-1/2 mx-auto pb-8">
        <div className="relative">
-       <div className="flex justify-between items-center">
+       <div className="flex flex-col md:flex-row md:justify-between items-center mb-4">
 
-       <Input
-          isClearable
-          type="text"
-          value={filterValue}
-          onChange={e => { setFilterValue(e.target.value) }}
-          placeholder="Funda, cargador, etc..."
-          label="Buscar"
-          variant="bordered"
-          onClear={() => { setFilterValue('') } }
-          className="mb-4 w-1/2"
-        />
+       {/* Campo de búsqueda */}
+       <div className="order-1 md:order-none mb-2 md:mb-0 w-full md:w-1/2">
+          <Input
+            isClearable
+            type="text"
+            value={filterValue}
+            onChange={e => { setFilterValue(e.target.value) }}
+            placeholder="Funda, cargador, etc..."
+            label="Buscar"
+            variant="bordered"
+            onClear={() => { setFilterValue('') }}
+          />
+        </div>
 
-      <div className="p-3 flex items-center justify-end space-x-4">
-            <Button
-              color="primary"
-              size="md"
-              variant="solid"
-              onClick={() => { void handleSellClick() }}
-              isDisabled={selectedItems.size === 0}
-            >
-              Vender <ShoppingCart />
-            </Button>
-            <AddAccessoryModal />
-          </div>
-          </div>
-
-        <div style={{ margin: '20px auto', textAlign: 'center' }}>
-        <Table
+      {/* Botones */}
+      <div className="order-2 flex items-center justify-between space-x-4 w-full md:w-auto">
+          <Button
             color="primary"
-            selectionMode="multiple"
-            aria-label="Accessories table"
-            onSelectionChange={handleSelectionChange as any}
-            selectionBehavior='replace'
-        >
+            size="md"
+            variant="solid"
+            onClick={() => { void handleSellClick() }}
+            isDisabled={selectedItems.size === 0}
+          >
+            Vender <ShoppingCart />
+          </Button>
+          <AddAccessoryModal />
+        </div>
+          </div>
 
-<TableHeader>
-    <TableColumn
-        align="center"
-        onClick={() => { handleSortClick('name') }}
-        className="cursor-pointer hover:text-blue-500"
-    >
-        NOMBRE <span className="inline-block hover:visible invisible"></span>
-    </TableColumn>
-    <TableColumn
-        align="center"
-        onClick={() => { handleSortClick('category') }}
-        className="cursor-pointer hover:text-blue-500"
-    >
-        CATEGORIA <span className="inline-block hover:visible invisible"></span>
-    </TableColumn>
-    <TableColumn
-        align="center"
-        onClick={() => { handleSortClick('quantityInStock') }}
-        className="cursor-pointer hover:text-blue-500"
-    >
-        STOCK <span className="inline-block hover:visible invisible"></span>
-    </TableColumn>
-    <TableColumn
-        align="center"
-        onClick={() => { handleSortClick('price') }}
-        className="cursor-pointer hover:text-blue-500"
-    >
-        PRECIO <span className="inline-block hover:visible invisible"></span>
-    </TableColumn>
-    <TableColumn align="center">
-        ACCIONES
-    </TableColumn>
-</TableHeader>
+          <div className="overflow-x-auto">
+
+            <Table
+                color="primary"
+                selectionMode="multiple"
+                aria-label="Accessories table"
+                onSelectionChange={handleSelectionChange as any}
+                selectionBehavior='replace'
+            >
+
+        <TableHeader>
+              <TableColumn
+                  align="center"
+                  onClick={() => { handleSortClick('name') }}
+                  className="cursor-pointer hover:text-blue-500"
+              >
+                  NOMBRE <span className="inline-block hover:visible invisible"></span>
+              </TableColumn>
+              <TableColumn
+                  align="center"
+                  onClick={() => { handleSortClick('category') }}
+                  className="cursor-pointer hover:text-blue-500"
+              >
+                  CATEGORIA <span className="inline-block hover:visible invisible"></span>
+              </TableColumn>
+              <TableColumn
+                  align="center"
+                  onClick={() => { handleSortClick('quantityInStock') }}
+                  className="cursor-pointer hover:text-blue-500 hidden md:table-cell"
+              >
+                  STOCK <span className="inline-block hover:visible invisible"></span>
+              </TableColumn>
+              <TableColumn
+                  align="center"
+                  onClick={() => { handleSortClick('price') }}
+                  className="cursor-pointer hover:text-blue-500"
+              >
+                  PRECIO <span className="inline-block hover:visible invisible"></span>
+              </TableColumn>
+              <TableColumn align="center" className='hidden md:table-cell'>
+                  ACCIONES
+              </TableColumn>
+        </TableHeader>
 
           <TableBody>
 
-            {filteredAndSortedAccessories.map((accessory) => (
-              <TableRow key={accessory._id}>
-                <TableCell className="flex items-center justify-start">
-                <Image
-                  width={50}
-                  height={50}
-                  alt={accessory.name}
-                  src={accessory.imageUrl}
-                  className="mr-2"
-                />
-                <div className="p-2">
-                  {accessory.name}
-                </div>
-              </TableCell>
+          {filteredAndSortedAccessories.map((accessory) => (
+              <TableRow key={accessory._id} className="md:table-row flex flex-col md:flex-row">
+                <TableCell className="flex items-center justify-start mb-4 md:mb-0">
+                  <Image
+                    width={50}
+                    height={50}
+                    alt={accessory.name}
+                    src={accessory.imageUrl}
+                    className="mr-2"
+                  />
+                  <div className="p-2">
+                    {accessory.name}
+                  </div>
+                </TableCell>
 
-              <TableCell className='capitalize text-left'>{accessory.category}</TableCell>
-              <TableCell className='text-left'>{accessory.quantityInStock}</TableCell>
-              <TableCell className='text-left'>{accessory.price.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</TableCell>
+                <TableCell className='capitalize text-left mb-4 md:mb-0'>{accessory.category}</TableCell>
+      <TableCell className='text-left mb-4 md:mb-0'>{accessory.quantityInStock}</TableCell>
+      <TableCell className='text-left mb-4 md:mb-0'>{accessory.price.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</TableCell>
 
-                <TableCell>
+      <TableCell className="mb-4 md:mb-0">
 
                   <div className="relative flex items-center gap-2">
 
@@ -321,7 +325,7 @@ export default function TableComponent () {
                   </div>
                 </TableCell>
               </TableRow>
-            ))}
+          ))}
           </TableBody>
         </Table>
 
