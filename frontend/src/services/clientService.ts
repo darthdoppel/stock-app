@@ -18,6 +18,19 @@ export async function fetchClients (
   }
 }
 
+export async function fetchClientById (id: string): Promise<Client> {
+  try {
+    const response = await fetch(`${BASE_URL}/client/${id}`)
+    if (!response.ok) {
+      throw new Error('Error fetching client by id')
+    }
+    return await response.json()
+  } catch (error) {
+    console.error('Error fetching client by id:', error)
+    throw error
+  }
+}
+
 export async function deleteClient (id: string): Promise<void> {
   try {
     const response = await fetch(`${BASE_URL}/client/${id}`, {
@@ -113,6 +126,25 @@ export async function fetchTotalClientsCount (from?: Date, to?: Date): Promise<n
     return total
   } catch (error) {
     console.error('Error al obtener el total de clientes:', error)
+    throw error
+  }
+}
+
+export async function updateClientById (id: string, updatedData: Partial<Client>): Promise<Client> {
+  try {
+    const response = await fetch(`${BASE_URL}/client/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedData)
+    })
+    if (!response.ok) {
+      throw new Error('Error updating client')
+    }
+    return await response.json()
+  } catch (error) {
+    console.error('Error updating client:', error)
     throw error
   }
 }

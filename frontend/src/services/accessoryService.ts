@@ -83,3 +83,48 @@ export async function updateAccessoryStock (id: string, newQuantity: number): Pr
     throw error
   }
 }
+
+export async function fetchAccessoryById (id: string): Promise<Accessory> {
+  try {
+    const response = await fetch(`${BASE_URL}/accessory/${id}`)
+    if (!response.ok) {
+      const errorResponse = await response.json()
+      const errorMessage = (errorResponse?.message !== undefined && errorResponse?.message !== null)
+        ? errorResponse.message
+        : 'Error fetching accessory by id'
+
+      throw new Error(errorMessage)
+    }
+    const accessory = await response.json()
+    return accessory
+  } catch (error) {
+    console.error('Error fetching accessory by id:', error)
+    throw error
+  }
+}
+
+export async function updateAccessory (id: string, accessoryData: Partial<Accessory>): Promise<Accessory> {
+  try {
+    const response = await fetch(`${BASE_URL}/accessory/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(accessoryData)
+    })
+
+    if (!response.ok) {
+      const errorResponse = await response.json()
+      const errorMessage = (errorResponse?.message !== undefined && errorResponse?.message !== null)
+        ? errorResponse.message
+        : 'Error updating accessory'
+
+      throw new Error(errorMessage)
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error('Error updating accessory:', error)
+    throw error
+  }
+}

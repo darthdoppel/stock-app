@@ -13,6 +13,7 @@ import {
 } from '@nextui-org/react'
 import { toast } from 'sonner'
 import { type Accessory } from '../types'
+import { fetchAccessoryById, updateAccessory } from '../../services/accessoryService'
 
 interface EditAccessoryModalProps {
   isOpen: boolean
@@ -35,11 +36,9 @@ export default function EditAccessoryModal ({ isOpen, onOpenChange, accessoryId,
   const [category, setCategory] = useState<string>('') // o cualquier valor predeterminado que desees
 
   useEffect(() => {
-    // Cargar los datos del accesorio cuando el modal se abra
     const fetchAccessory = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/accessory/${accessoryId}`)
-        const data = await response.json()
+        const data = await fetchAccessoryById(accessoryId)
         setAccessory(data)
         setCategory(data.category)
       } catch (error) {
@@ -86,22 +85,10 @@ export default function EditAccessoryModal ({ isOpen, onOpenChange, accessoryId,
       category
     }
     try {
-      const response = await fetch(`http://localhost:3000/accessory/${accessoryId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(accessoryData)
-      })
+      const data = await updateAccessory(accessoryId, accessoryData) // Use the service function
 
-      if (!response.ok) {
-        throw new Error('Hubo un error al enviar los datos')
-      }
-
-      const data = await response.json()
       toast.success('Accesorio actualizado')
-
-      onEditSuccess(data) // Llamar al callback después de una edición exitosa
+      onEditSuccess(data) // Call the callback after a successful edit
       onOpenChange()
     } catch (err) {
       if (err instanceof Error) {
@@ -120,7 +107,7 @@ export default function EditAccessoryModal ({ isOpen, onOpenChange, accessoryId,
             <>
               <ModalHeader className="flex flex-col gap-1">Editar Accesorio</ModalHeader>
               <ModalBody>
-              <div className="overflow-y-auto max-h-[400px]">
+              <div className="overflow-y-auto">
 
               {error !== '' && <p className="text-red-600">{error}</p>}
               <form onSubmit={(e) => { e.preventDefault(); void handleSubmit() }}>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Divider, Input } from '@nextui-org/react'
 import { toast } from 'sonner'
 import { type Client } from '../types'
+import { fetchClientById, updateClientById } from '../../services/clientService'
 
 interface EditClientModalProps {
   isOpen: boolean
@@ -25,8 +26,7 @@ export default function EditClientModal ({ isOpen, onOpenChange, clientId, onEdi
   useEffect(() => {
     const fetchClient = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/client/${clientId}`)
-        const data = await response.json()
+        const data = await fetchClientById(clientId) // Use the service function
         setClient(data)
       } catch (error) {
         console.error('Error al cargar el cliente:', error)
@@ -45,19 +45,7 @@ export default function EditClientModal ({ isOpen, onOpenChange, clientId, onEdi
 
   const handleSubmit = async (): Promise<void> => {
     try {
-      const response = await fetch(`http://localhost:3000/client/${clientId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(client)
-      })
-
-      if (!response.ok) {
-        throw new Error('Hubo un error al enviar los datos')
-      }
-
-      const data = await response.json()
+      const data = await updateClientById(clientId, client)
       toast.success('Cliente actualizado')
       onEditSuccess(data)
       onOpenChange()

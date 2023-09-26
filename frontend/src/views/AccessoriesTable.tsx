@@ -281,7 +281,7 @@ export default function TableComponent () {
                   className="mr-2"
                 />
                 <div className="p-2">
-                  {accessory.name}
+                  {accessory.name} ({accessory.brand})
                 </div>
               </TableCell>
 
