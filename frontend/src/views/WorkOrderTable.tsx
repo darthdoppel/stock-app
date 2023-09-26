@@ -138,7 +138,7 @@ export default function WorkOrderTable () {
   }
 
   return (
-    <div className="w-1/2 mx-auto pb-8">
+    <div className="w-full mx-auto pb-8 px-4 md:px-8 lg:px-16"> {/* Added horizontal padding */}
       <div className="relative">
 
       <div className="flex justify-between items-center mb-4">
@@ -159,9 +159,9 @@ export default function WorkOrderTable () {
           <AddWorkOrderModal />
         </div>
 
-<Table aria-label="Work Orders table">
+<Table aria-label="Work Orders table" >
   <TableHeader>
-  <TableColumn align="center" className="w-1/6">NÚMERO DE ORDEN</TableColumn>
+  <TableColumn align="center" className="w-1/12">NÚMERO DE ORDEN</TableColumn>
 
     <TableColumn align="center">CLIENTE</TableColumn>
     <TableColumn align="center">FECHA</TableColumn>
@@ -173,7 +173,9 @@ export default function WorkOrderTable () {
       ? workOrders.map((workOrder) => (
           <TableRow key={workOrder._id}>
           <TableCell>{workOrder.orderNumber}</TableCell>
-            <TableCell>{workOrder.client.firstName} {workOrder.client.lastName}</TableCell>
+            <TableCell>
+  {workOrder.client.firstName} {workOrder.client.lastName}
+</TableCell>
             <TableCell>{new Date(workOrder.dateCreated).toLocaleDateString()}</TableCell>
             <TableCell>{renderStatusChip(translateStatus(workOrder.status))}</TableCell>
             <TableCell>
@@ -217,6 +219,8 @@ export default function WorkOrderTable () {
         </span>
 
         {totalPages > 1 && (
+                        <div className="mt-4 flex justify-center"> {/* Added margin-top and center alignment */}
+
           <Pagination
             isCompact
             showControls
@@ -225,6 +229,7 @@ export default function WorkOrderTable () {
             onChange={handlePageChange}
             className='mt-4'
           />
+          </div>
         )}
 
             {isFetching && (

@@ -231,6 +231,7 @@ export default function TableComponent () {
             onSelectionChange={handleSelectionChange as any}
             selectionBehavior='replace'
             className="w-full mb-4 mx-auto"
+            isStriped
              >
 
 <TableHeader>

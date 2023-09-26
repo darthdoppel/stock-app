@@ -57,7 +57,7 @@ export default function SalesTable () {
   }
 
   return (
-    <div className="w-1/2 mx-auto">
+    <div className="w-full mx-auto pb-8 px-4 md:px-8 lg:px-16"> {/* Updated to full width and added horizontal padding */}
       {loading
         ? (
           <div className="flex justify-center">
@@ -66,7 +66,7 @@ export default function SalesTable () {
           )
         : (
           <>
-            <Table aria-label="Sales table">
+            <Table aria-label="Sales table" className="w-full mx-auto mb-4">
               <TableHeader>
                 <TableColumn>FECHA</TableColumn>
                 <TableColumn>ACCESORIOS VENDIDOS</TableColumn>
@@ -79,6 +79,7 @@ export default function SalesTable () {
                     <TableCell>
                     {sale.accessoriesSold.map((item, index) => {
                       const accessory = accessories.find((acc) => acc._id.toString() === item._id.toString())
+                      console.log('Rendering:', accessory?.name) // Log the name being rendered
 
                       if (accessory == null) {
                         console.error('Accesorio no encontrado para el ID:', item._id)
@@ -89,7 +90,6 @@ export default function SalesTable () {
                         ? `${accessory.name} x${item.quantity}`
                         : `, ${accessory.name} x${item.quantity}`
                     })}
-
                     </TableCell>
 
                     <TableCell>
@@ -104,15 +104,17 @@ export default function SalesTable () {
               </TableBody>
             </Table>
             {totalPages > 1 && (
-              <Pagination
-                isCompact
-                showControls
-                total={totalPages}
-                page={currentPage}
-                onChange={(newPage) => {
-                  handlePageChange(newPage)
-                }}
-              />
+              <div className="mt-4 flex justify-center"> {/* Added margin-top and center alignment */}
+                <Pagination
+                  isCompact
+                  showControls
+                  total={totalPages}
+                  page={currentPage}
+                  onChange={(newPage) => {
+                    handlePageChange(newPage)
+                  }}
+                />
+              </div>
             )}
           </>
           )}

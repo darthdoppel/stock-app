@@ -100,8 +100,8 @@ export default function ClientTable () {
   }
 
   return (
-    <div className="w-1/2 mx-auto pb-8">
-      <div className="relative">
+    <div className="w-full mx-auto pb-8 px-4 md:px-8 lg:px-16"> {/* Added horizontal padding */}
+    <div className="relative">
         {/* Botón para activar el modal de agregar cliente */}
         <div className="flex justify-between items-center mb-4">
           <Input
@@ -188,6 +188,8 @@ export default function ClientTable () {
         </span>
 
         {totalPages > 1 && (
+                        <div className="mt-4 flex justify-center"> {/* Added margin-top and center alignment */}
+
           <Pagination
             isCompact
             showControls
@@ -196,6 +198,7 @@ export default function ClientTable () {
             onChange={handlePageChange}
             className='mt-4'
           />
+        </div>
         )}
 
         {(editingClientId != null) && (

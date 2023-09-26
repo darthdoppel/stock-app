@@ -13,6 +13,8 @@ import {
   DateRangePicker
 } from '@tremor/react'
 
+import { Card as NextUICard, CardBody } from '@nextui-org/react'
+
 export default function Dashboard () {
   const [totalSales, setTotalSales] = useState<number | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
@@ -22,6 +24,7 @@ export default function Dashboard () {
     to: new Date()
   })
   const [performanceData, setPerformanceData] = useState<ChartData[]>([])
+  const [isDateRangeSelected, setIsDateRangeSelected] = useState(false)
 
   useEffect(() => {
     async function fetchData () {
@@ -45,20 +48,28 @@ export default function Dashboard () {
   }, [dateRange])
 
   return (
-    <main className="mx-auto max-w-screen-xl p-6">
-
-      <div className="flex mb-10">
+    <main className="mx-auto max-w-screen-xl">
+      <div className="flex flex-col mb-10">
         <DateRangePicker
           className="max-w-sm"
           enableSelect={false}
           onValueChange={(value) => {
             if ((value.from != null) && (value.to != null)) {
               setDateRange({ from: value.from, to: value.to })
+              setIsDateRangeSelected(true) // Set to true when a date range is selected
             }
           }}
           placeholder="Seleccionar rango de fechas"
           selectPlaceholder="Seleccionar"
         />
+
+        {!isDateRangeSelected && (
+          <NextUICard className="mb-4 max-w-xs p-2 mt-4">
+            <CardBody className="p-2 text-sm">
+              <p>Please select a date range to view the graphs on the dashboard.</p>
+            </CardBody>
+          </NextUICard>
+        )}
       </div>
 
       <Grid numItemsMd={3} className="gap-6">
