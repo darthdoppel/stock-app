@@ -190,7 +190,7 @@ export default function TableComponent () {
   )
 
   return (
-    <div className="w-1/2 mx-auto pb-8">
+<div className="w-full mx-auto pb-8 px-4 md:px-8 lg:px-16"> {/* Added horizontal padding */}
        <div className="relative">
        <div className="flex flex-col md:flex-row md:justify-between items-center mb-4">
 
@@ -223,15 +223,15 @@ export default function TableComponent () {
         </div>
   </div>
 
-  <div className="overflow-x-auto w-full">
+<div className="w-full mx-auto pb-8">
         <Table
             color="primary"
             selectionMode="multiple"
             aria-label="Accessories table"
             onSelectionChange={handleSelectionChange as any}
             selectionBehavior='replace'
-            className="min-w-[900px] mb-4"
-        >
+            className="w-full mb-4 mx-auto"
+             >
 
 <TableHeader>
     <TableColumn
