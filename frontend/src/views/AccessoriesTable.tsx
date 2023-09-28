@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Button, Image, Input, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Tooltip, Pagination } from '@nextui-org/react'
+import { Button, Image, Input, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Tooltip, Pagination, Chip } from '@nextui-org/react'
 import { type Accessory } from '../components/types'
 import { EditIcon } from '../icons/EditIcon'
 import { DeleteIcon } from '../icons/DeleteIcon'
@@ -28,6 +28,7 @@ export default function TableComponent () {
   const [sortField, setSortField] = useState<string | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   const [totalAccessories, setTotalAccessories] = useState(0)
+  const [isChipVisible, setChipVisible] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -222,6 +223,13 @@ export default function TableComponent () {
           <AddAccessoryModal />
         </div>
   </div>
+
+          {/* Mensaje Informativo */}
+        {isChipVisible && (
+          <Chip color="warning" className="mb-4" onClose={() => { setChipVisible(false) }}>
+            La base de datos está en modo de solo lectura. Puedes visualizar pero no realizar cambios.
+          </Chip>
+        )}
 
 <div className="w-full mx-auto pb-8">
         <Table
