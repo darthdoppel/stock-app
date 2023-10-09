@@ -28,9 +28,9 @@ export default function ClientTable () {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseData = await fetchClients(currentPage, itemsPerPage)
-        setClients(responseData.data) // Acceso directo a data
-        setTotalClients(responseData.total) // Acceso directo a total
+        const responseData = await fetchClients(currentPage, itemsPerPage, filterValue)
+        setClients(responseData.data)
+        setTotalClients(responseData.total)
         setTotalPages(Math.ceil(responseData.total / itemsPerPage))
       } catch (error) {
         console.error('Error al obtener los clientes:', error)
@@ -40,7 +40,7 @@ export default function ClientTable () {
     }
 
     void fetchData()
-  }, [currentPage, itemsPerPage])
+  }, [currentPage, itemsPerPage, filterValue])
 
   const handleEditClick = (id: string) => {
     setEditingClientId(id)

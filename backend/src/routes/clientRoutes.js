@@ -18,15 +18,28 @@ router.post('/client', async (req, res) => {
 
 router.get('/clients', async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1 // Obtén el número de página de la consulta o usa 1 como valor predeterminado
-    const perPage = parseInt(req.query.perPage) || 10 // Obtén la cantidad por página o usa 10 como valor predeterminado
+    const page = parseInt(req.query.page) || 1
+    const perPage = parseInt(req.query.perPage) || 10
+    const search = req.query.search || ''
 
-    const skip = (page - 1) * perPage // Calcula el número de documentos para omitir
-    const clients = await Client.find()
-      .skip(skip) // Omite los documentos anteriores en función de la página
-      .limit(perPage) // Limita la cantidad de documentos por página
+    const skip = (page - 1) * perPage
 
-    const totalClients = await Client.countDocuments() // Cuenta el número total de documentos en la colección
+    // Construir la consulta de búsqueda dinámica
+    const searchQuery = search
+      ? {
+          $or: [
+            { firstName: new RegExp(search, 'i') },
+            { lastName: new RegExp(search, 'i') },
+            { dni: new RegExp(search, 'i') }
+          ]
+        }
+      : {}
+
+    // Obtener los clientes y la cuenta total basados en la consulta de búsqueda
+    const [clients, totalClients] = await Promise.all([
+      Client.find(searchQuery).skip(skip).limit(perPage),
+      Client.countDocuments(searchQuery)
+    ])
 
     res.send({
       data: clients,

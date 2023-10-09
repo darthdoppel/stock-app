@@ -4,11 +4,12 @@ const BASE_URL = 'https://stock-app-api-rmyf.onrender.com'
 
 export async function fetchClients (
   page: number,
-  perPage: number
+  perPage: number,
+  search: string = ''
 ): Promise<{ data: Client[], total: number }> {
   try {
     const response = await fetch(
-      `${BASE_URL}/clients?page=${page}&perPage=${perPage}`
+      `${BASE_URL}/clients?page=${page}&perPage=${perPage}&search=${encodeURIComponent(search)}`
     )
     const responseData: { data: Client[], total: number } = await response.json()
     return responseData

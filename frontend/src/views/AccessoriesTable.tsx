@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Button, Image, Input, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Tooltip, Pagination, Chip } from '@nextui-org/react'
+import { Button, Avatar, Input, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Tooltip, Pagination, Chip } from '@nextui-org/react'
 import { type Accessory } from '../components/types'
 import { EditIcon } from '../icons/EditIcon'
 import { DeleteIcon } from '../icons/DeleteIcon'
@@ -281,17 +281,18 @@ export default function TableComponent () {
             {filteredAndSortedAccessories.map((accessory) => (
               <TableRow key={accessory._id}>
                 <TableCell className="flex items-center justify-start">
-                <Image
-                  width={50}
-                  height={50}
-                  alt={accessory.name}
-                  src={accessory.imageUrl}
-                  className="mr-2"
-                />
-                <div className="p-2">
-                  {accessory.name} ({accessory.brand})
-                </div>
-              </TableCell>
+                  <Avatar
+                    src={accessory.imageUrl}
+                    name={accessory.name}
+                    isBordered
+                    size="md"
+                    className="mr-2"
+                    radius="lg"
+                  />
+                  <div className="p-2">
+                    {accessory.name} ({accessory.brand})
+                  </div>
+                </TableCell>
 
               <TableCell className='capitalize text-left'>{accessory.category}</TableCell>
               <TableCell className='text-left'>{accessory.quantityInStock}</TableCell>
